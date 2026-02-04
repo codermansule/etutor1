@@ -1156,6 +1156,12 @@ Aggregated learning stats per user per subject.
 
 ---
 
+## Progress Snapshot
+
+- **Phase 1 marketing refresh (2026-02-04):** Rebuilt the homepage hero/benefits/how-it-works/pricing/subjects sections with tutoring-focused storytelling and JSON-LD metadata.
+- **Authentication + Supabase helpers:** Added the auth layout, register/login/recover pages, browser/server/service-role Supabase clients, and middleware guarding `/dashboard`, `/student`, `/tutor`.
+- **Next steps to start tomorrow:** Seed Supabase tables (subjects, tutor_profiles, availability, bookings, reviews), add marketing subpages (`/pricing`, `/how-it-works`, `/subjects/[slug]`, `/tutors/[username]`), and lay the Phase 1 dashboard skeleton so auth work feeds directly into Phase 2.
+
 ## Environment Variables Required
 
 ```env
