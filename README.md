@@ -51,3 +51,37 @@ Before any card moves to the “Verification & Done” column, the `Phase Verifi
 4. `npm run test` (currently lint)
 
 Manual checks for each phase (responsive review, feature test, lighthouse) are complementary to the automated checks listed above.
+
+## Supabase Setup (Phase 1)
+
+1. Add a `.env.local` with the keys you copied from Supabase:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://qdncyphicsimvrpvpsmv.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable__PQ72biugCuKAmq4qPIcwg_VYjfD_bM
+   SUPABASE_SERVICE_ROLE_KEY=<service_role key from your Supabase API settings>
+   ```
+   Do not commit `.env.local` or the service role key.
+
+2. Create the Phase 1 tables in the Supabase SQL editor:
+   ```sql
+   create table subjects (
+     id uuid primary key default gen_random_uuid(),
+     name text not null,
+     slug text unique not null,
+     category text not null,
+     description text,
+     sort_order integer default 0
+   );
+
+   create table profiles (
+     id uuid primary key references auth.users(id) on delete cascade,
+     full_name text not null,
+     email text not null,
+     role text not null default 'student',
+     timezone text default 'UTC',
+     created_at timestamptz default now()
+   );
+   ```
+
+3. Seed `subjects` with your initial offerings (languages, test prep, professional, etc.) so the homepage can render them via `createServerClient()`.
+4. When building auth flows, use `createBrowserClient()` on the client and the server helper above for middleware/server components that need the service role key.

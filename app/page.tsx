@@ -1,6 +1,7 @@
 import Link from "next/link";
 import FeatureCard from "@/components/ui/FeatureCard";
 import StatCard from "@/components/ui/StatCard";
+import { createServerClient } from "@/lib/supabase/server";
 
 const heroStats = [
   {
@@ -11,8 +12,8 @@ const heroStats = [
   { label: "Marketing", value: "SSG + ISR", detail: "landing + tutor pages" },
   {
     label: "Verification",
-    value: "build / lint / test",
-    detail: "CI workflow coverage",
+    value: "build / typecheck / lint",
+    detail: "shared CI gate",
   },
 ];
 
@@ -64,7 +65,41 @@ const phaseTimeline = [
   },
 ];
 
-export default function Home() {
+type Subject = {
+  id?: string;
+  name: string;
+  category?: string | null;
+  description?: string | null;
+};
+
+const subjectPlaceholder: Subject[] = [
+  {
+    name: "English Conversations",
+    category: "Languages",
+    description: "Live speaking practice + adaptive feedback loops.",
+  },
+  {
+    name: "SAT & ACT Preparation",
+    category: "Test Prep",
+    description: "AI-assisted quizzes paired with tutor review sessions.",
+  },
+  {
+    name: "Professional English",
+    category: "Professional",
+    description: "Career coaching, presentations, and negotiation drills.",
+  },
+];
+
+export default async function Home() {
+  const supabase = createServerClient();
+  const { data: subjectData } = await supabase
+    .from("subjects")
+    .select("id, name, category, description")
+    .order("sort_order", { ascending: true })
+    .limit(6);
+
+  const subjects = (subjectData as Subject[] | null) ?? null;
+
   return (
     <main className="flex flex-col gap-16 py-12">
       <section className="grid gap-10 rounded-3xl bg-slate-900/70 px-6 py-10 shadow-[0_35px_120px_rgba(2,6,23,0.8)] lg:grid-cols-[2fr_1fr] lg:items-center lg:px-10">
@@ -159,6 +194,33 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold text-white">{phase.phase}</h3>
               <p className="text-sm text-slate-300">{phase.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-6">
+        <div className="flex flex-col gap-2 text-center">
+          <p className="text-xs uppercase tracking-[0.4em] text-slate-400">
+            Subjects seeded in Supabase
+          </p>
+          <h2 className="text-3xl font-semibold text-white">
+            Flavor the marketplace with seeded data
+          </h2>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {(subjects ?? subjectPlaceholder).map((subject) => (
+            <div
+              key={subject.name}
+              className="rounded-2xl border border-white/10 bg-white/5 p-5 text-left"
+            >
+              <p className="text-xs uppercase tracking-[0.4em] text-slate-500">
+                {subject.category ?? "Specialty"}
+              </p>
+              <h3 className="mt-2 text-xl font-semibold text-white">{subject.name}</h3>
+              {subject.description && (
+                <p className="mt-2 text-sm text-slate-300">{subject.description}</p>
+              )}
             </div>
           ))}
         </div>
