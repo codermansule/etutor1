@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_MATCHERS = ["/dashboard/:path*", "/student/:path*", "/tutor/:path*"];
-
-export const config = { matcher: PROTECTED_MATCHERS };
+export const config = {
+  matcher: ["/dashboard/:path*", "/student/:path*", "/tutor/:path*"],
+};
 
 export async function middleware(req: NextRequest) {
   const accessToken = req.cookies.get("sb-access-token");
