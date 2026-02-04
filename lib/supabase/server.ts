@@ -1,22 +1,42 @@
 import { createClient } from "@supabase/supabase-js";
+import { createServerClient as createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !serviceRoleKey) {
-  throw new Error(
-    "Missing Supabase configuration (NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY)",
-  );
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error("Missing Supabase URL or anon key");
 }
 
-export const createServerClient = () =>
-  createClient(supabaseUrl, serviceRoleKey, {
+type ReadonlyCookies = {
+  getAll: () => { name: string; value: string }[];
+};
+
+export const createServerClient = () => {
+  const cookieStore = cookies() as unknown as ReadonlyCookies;
+
+  return createServerSupabaseClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll: () =>
+        cookieStore.getAll().map(({ name, value }) => ({
+          name,
+          value,
+        })),
+    },
+  });
+};
+
+export const createServiceRoleClient = () => {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!serviceRoleKey) {
+    throw new Error("Missing Supabase service role key");
+  }
+
+  return createClient(supabaseUrl, serviceRoleKey, {
     auth: {
       persistSession: false,
     },
-    global: {
-      headers: {
-        "x-internal": "true",
-      },
-    },
   });
+};
