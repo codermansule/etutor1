@@ -1,8 +1,9 @@
 # SBETUTOR - Complete Project Specification
 
-**Version:** 1.0
+**Version:** 1.1
 **Created:** 2026-02-04
-**Status:** Planning Complete - Ready for Phase 1
+**Last Updated:** 2026-02-05
+**Status:** Phase 1 Complete, Phase 2-4 Partial — Admin Panel Fixed
 
 ---
 
@@ -16,8 +17,8 @@ Preply-style online tutoring marketplace with hybrid monetization (marketplace +
 
 | Layer | Technology |
 |-------|-----------|
-| Framework | Next.js 14+ (App Router), TypeScript (strict) |
-| Styling | Tailwind CSS + shadcn/ui |
+| Framework | Next.js 16.1.6 (App Router), React 19, TypeScript (strict) |
+| Styling | Tailwind CSS 4 + shadcn/ui (manual, dark theme) |
 | State | Zustand (client), React Server Components (server) |
 | Forms | React Hook Form + Zod |
 | Backend/DB | Supabase (PostgreSQL, Auth, Realtime, Storage, Edge Functions) |
@@ -1162,35 +1163,64 @@ Aggregated learning stats per user per subject.
 
 **Foundation, Auth, Marketing, Database, Dashboard Skeleton**
 
-#### Completed Items
-- **Next.js 16 + TypeScript strict + Tailwind CSS 4** scaffolding with App Router
-- **shadcn/ui component system** (manual, dark theme): Button, Input, Label, Card, Badge, Separator, Avatar with `cn()` utility
-- **Supabase integration**: Browser client, server client, service role client
+- **Next.js 16.1.6 + React 19 + TypeScript strict + Tailwind CSS 4** scaffolding with App Router
+- **shadcn/ui component system** (manual, dark theme): Button, Input, Label, Card, Badge, Separator, Avatar, Textarea with `cn()` utility
+- **Supabase integration**: Browser client (`lib/supabase/client.ts`), async server client (`lib/supabase/server.ts`), service role client
 - **Database migrations** (`supabase/migrations/00001-00004`): `profiles`, `subjects`, `tutor_profiles`, `tutor_subjects` with RLS policies, indexes, full-text search, auto-triggers
 - **Seed data** (`supabase/seed.sql`): 54 subjects across 6 categories with 5 child subjects
-- **Auth flows** (`app/(auth)/`): Login, register (with role selection), password recovery
-- **Middleware**: Protects `/dashboard/*`, `/student/*`, `/tutor/*` routes
+- **Auth flows**: Login (email/password), Register (with role selection), Password recovery, Google OAuth (`SocialAuth` component)
+- **Middleware**: Protects `/dashboard/*`, `/student/*`, `/tutor/*`, `/admin/*`; detects `sb-*-auth-token` cookies; sets `x-url` header
 - **Route groups**: `(marketing)` Header/Footer, `(auth)` centered card, `(dashboard)` Sidebar/Topbar
 - **Marketing pages**: Homepage, About, Pricing (FAQPage JSON-LD), How It Works
 - **Subject pages**: Directory (`/subjects`), Dynamic detail (`/subjects/[slug]`) with Course JSON-LD
-- **Dashboard skeleton**: Student + Tutor dashboards with role-based sidebar navigation
+- **Dashboard skeleton**: Student + Tutor + Admin dashboards with role-based sidebar navigation
 - **CI/CD**: GitHub Actions verification workflow
-- **Verification passed**: build (13 routes), tsc (0 errors), lint (0 warnings)
+- **Build verified**: 32 routes, tsc 0 errors
 
-#### Database State
+#### Database State (as of Phase 1)
 | Table | Rows | Notes |
 |-------|------|-------|
-| `profiles` | 0 | Auto-populated on signup via trigger |
+| `profiles` | 1+ | Auto-populated on signup via trigger. Admin user created. |
 | `subjects` | 54 | 49 parent + 5 children, 6 categories |
 | `tutor_profiles` | 0 | Phase 2 onboarding |
 | `tutor_subjects` | 0 | Phase 2 onboarding |
 
-### Phase 2 — NEXT
-**Marketplace and Booking** — Tutor onboarding, search/filter, public tutor profiles, availability editor, booking with Stripe, reviews, reminder emails.
+### Phase 2 — PARTIAL (skeleton pages, business logic pending)
+**Marketplace & Booking**
 
-- **Phase 1 marketing refresh (2026-02-04):** Rebuilt the homepage hero/benefits/how-it-works/pricing/subjects sections with tutoring-focused storytelling and JSON-LD metadata.
-- **Authentication + Supabase helpers:** Added the auth layout, register/login/recover pages, browser/server/service-role Supabase clients, and middleware guarding `/dashboard`, `/student`, `/tutor`.
-- **Next steps to start tomorrow:** Seed Supabase tables (subjects, tutor_profiles, availability, bookings, reviews), add marketing subpages (`/pricing`, `/how-it-works`, `/subjects/[slug]`, `/tutors/[username]`), and lay the Phase 1 dashboard skeleton so auth work feeds directly into Phase 2.
+#### Built
+- Marketplace: `/tutors` (search/filter UI), `/tutors/[id]` (tutor profile + booking widget)
+- Tutor bookings: `/tutor/bookings` (list with accept/reject UI)
+- Student my-lessons: `/student/my-lessons` (booking list with join/review)
+- `TutorCard` component for marketplace listings
+
+#### Not Yet Built
+- Tutor onboarding wizard, availability editor, Stripe Checkout, reviews, lesson packages
+
+### Phase 3 — PARTIAL (skeleton only)
+
+**Video Classroom & Messaging** — Built: LiveKit token API, Classroom page, Messaging page. Not built: LiveKit video, tldraw, recording, real-time messaging.
+
+### Phase 4 — PARTIAL (core infrastructure built)
+
+**AI Tutor & Gamification** — Built: AI Chat/Quiz/Study Plan APIs (GPT-4o + RAG), gamification engine (XP/streaks), notifications, Resend emails, student AI pages, admin dashboard + ingestion, super admin. Not built: Badges, leaderboards, challenges, rewards store, AI tier limits.
+
+### Phases 5-6 — NOT STARTED
+
+---
+
+### Bug Fixes (2026-02-05)
+- **Async createServerClient** (`946036f`): Made async in server.ts but only layout.tsx updated. 21 other call sites got a Promise. Fixed all 22 files.
+- **Middleware cookies** (`46b8094`): Checked wrong names. Fixed to detect `sb-*-auth-token`. Added `/admin/:path*` to matcher.
+
+---
+
+### Next Steps (Priority)
+1. Tutor onboarding wizard
+2. Availability editor (timezone-aware)
+3. Stripe Checkout (booking payment)
+4. Reviews system
+5. Public tutor profiles with ISR + JSON-LD
 
 ## Environment Variables Required
 
