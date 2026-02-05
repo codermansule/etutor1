@@ -25,7 +25,9 @@ export default async function DashboardLayout({
     .eq("id", user.id)
     .single();
 
-  const role = (profile?.role as "student" | "tutor" | "admin") ?? "student";
+  // Super Admin check for specific email
+  const isSuperAdmin = user.email === "admin@etutor.studybitests.com";
+  const role = isSuperAdmin ? "admin" : (profile?.role as "student" | "tutor" | "admin") ?? "student";
   const userName = profile?.full_name ?? user.email ?? "User";
 
   const headersList = await headers();
