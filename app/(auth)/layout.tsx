@@ -1,8 +1,9 @@
 import Link from "next/link";
+import Logo from "@/components/shared/Logo";
 
 export const metadata = {
-  title: "SBETUTOR Auth",
-  description: "Register or log in to the SBETUTOR dashboard.",
+  title: "ETUTOR Auth",
+  description: "Securely register or log in to ETUTOR, the elite adaptive tutoring platform.",
 };
 
 export default function AuthLayout({
@@ -12,17 +13,12 @@ export default function AuthLayout({
 }>) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 px-4 py-16 text-white">
-      <div className="w-full max-w-xl space-y-4 rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-[0_40px_80px_rgba(2,6,23,0.7)]">
-        <div className="flex justify-between">
-          <div>
-            <Link
-              href="/"
-              className="text-lg font-bold uppercase tracking-[0.3em] text-sky-300"
-            >
-              SBETUTOR
-            </Link>
-            <p className="text-xs uppercase tracking-[0.4em] text-slate-500">
-              Authentication
+      <div className="w-full max-w-xl space-y-4 rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-[0_40px_80px_rgba(2,6,23,0.7)] backdrop-blur-xl">
+        <div className="flex justify-between items-start">
+          <div className="space-y-1">
+            <Logo />
+            <p className="text-[10px] uppercase tracking-[0.4em] text-slate-500 font-bold">
+              Secure Auth Portal
             </p>
           </div>
           <nav className="flex items-center gap-3 text-xs uppercase tracking-[0.3em]">

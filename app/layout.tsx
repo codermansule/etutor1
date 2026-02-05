@@ -15,23 +15,23 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "SBETUTOR | Preply-style tutoring + AI classroom",
+  title: "ETUTOR | Elite Online Tutoring + AI Adaptive Classroom",
   description:
-    "Online tutoring marketplace with expert human tutors, AI coaching, live video classrooms, and gamified learning.",
+    "Premium tutoring marketplace with expert human tutors, AI-powered study plans, live video classrooms, and gamified learning experiences.",
   metadataBase: new URL("https://sb-e-tutor.example.com"),
   openGraph: {
-    title: "SBETUTOR | Preply-style tutoring + AI classroom",
+    title: "ETUTOR | Elite Online Tutoring + AI Adaptive Classroom",
     description:
-      "Online tutoring marketplace with expert human tutors, AI coaching, live video classrooms, and gamified learning.",
+      "Premium tutoring marketplace with expert human tutors, AI-powered study plans, live video classrooms, and gamified learning experiences.",
     url: "https://sb-e-tutor.example.com",
-    siteName: "SBETUTOR",
+    siteName: "ETUTOR",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SBETUTOR | Preply-style tutoring + AI classroom",
+    title: "ETUTOR | Elite Online Tutoring + AI Adaptive Classroom",
     description:
-      "Online tutoring marketplace with expert human tutors, AI coaching, live video classrooms, and gamified learning.",
+      "Premium tutoring marketplace with expert human tutors, AI-powered study plans, live video classrooms, and gamified learning experiences.",
   },
   icons: {
     icon: "/favicon.ico",

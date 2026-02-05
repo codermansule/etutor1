@@ -4,10 +4,10 @@
 | Phase | Status | Completed |
 |-------|--------|-----------|
 | Phase 1 – Foundation | COMPLETE | 2026-02-05 |
-| Phase 2 – Marketplace & Booking | NEXT | — |
-| Phase 3 – Video Classroom & Messaging | Blocked by Phase 2 | — |
-| Phase 4 – AI Tutor & Gamification | Blocked by Phase 2+3 | — |
-| Phase 5 – Payments V2/Content/Notifications | Blocked by Phase 2+4 | — |
+| Phase 2 – Marketplace & Booking | COMPLETE | 2026-02-05 |
+| Phase 3 – Video Classroom & Messaging | IN PROGRESS | — |
+| Phase 4 – AI Tutor & Gamification | COMPLETE | 2026-02-05 |
+| Phase 5 – Payments V2/Content/Notifications | IN PROGRESS | — |
 | Phase 6 – Polish & Launch | Blocked by Phase 1-5 | — |
 
 ## Board Structure
@@ -30,6 +30,34 @@
 - [x] Subjects: /subjects, /subjects/[slug] (Course JSON-LD)
 - [x] Dashboard: /student, /tutor (sidebar + topbar)
 - [x] CI: build + tsc + lint = all pass
+
+## Phase 2 Deliverables (Verified)
+- [x] Database: availability, bookings, reviews, payments tables
+- [x] Onboarding: Multi-step tutor onboarding wizard
+- [x] Marketplace: Tutor search page with filtering
+- [x] Profiles: Public tutor profile pages with booking widget
+- [x] Availability: Weekly recurring + date override editor
+- [x] Booking: Interactive calendar + slot selection + checkout flow
+- [x] Reviews: Student feedback submission page
+
+## Phase 3 Deliverables (In Progress)
+- [x] Database: conversations, messages tables + RLS + realtime
+- [x] Messaging: Real-time chat interface with sidebar and live updates
+- [x] Classroom: LiveKit integration + Token API + immersive video UI
+- [ ] Session persistence and recording logic
+- [ ] File sharing in chat
+
+## Phase 4 Deliverables (Verified)
+- [x] Database: XP, badges, streaks, leaderboards, AI chat, quizzes tables
+- [x] AI Tutor: Streaming chat with subject context (v6 compatible)
+- [x] Gamification: XP engine + streak system integrated into layout
+- [x] UI: Achievement dashboard (Badges, Leaderboard, Stats)
+- [x] Quizzes: AI-powered quiz generator + interactive quiz interface
+- [x] RAG: Vector search and knowledge document indexing infrastructure
+- [x] Study Plans: Adaptive learning path generation API
+
+
+
 
 ## Dependency Pyramid
 | Phase | Depends On | Gate |

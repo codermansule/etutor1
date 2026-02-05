@@ -11,15 +11,27 @@
     "test": "npm run lint"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^3.0.25",
+    "@ai-sdk/react": "^3.0.72",
+    "@livekit/components-react": "^2.9.19",
+    "@livekit/components-styles": "^1.2.0",
     "@supabase/auth-helpers-nextjs": "^0.15.0",
     "@supabase/supabase-js": "^2.94.1",
+    "ai": "^6.0.70",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.31.0",
+    "livekit-client": "^2.17.0",
+    "livekit-server-sdk": "^2.15.0",
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
+    "openai": "^6.17.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "tailwind-merge": "^3.4.0"
+    "react-markdown": "^10.1.0",
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

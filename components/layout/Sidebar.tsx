@@ -30,7 +30,7 @@ const studentNav: NavItem[] = [
   { href: "/student/my-lessons", label: "My Lessons", icon: Calendar },
   { href: "/student/ai-tutor", label: "AI Tutor", icon: BrainCircuit },
   { href: "/student/achievements", label: "Achievements", icon: Trophy },
-  { href: "/student/messages", label: "Messages", icon: MessageSquare },
+  { href: "/messages", label: "Messages", icon: MessageSquare },
   { href: "/student/settings", label: "Settings", icon: Settings },
 ];
 
@@ -46,22 +46,19 @@ const tutorNav: NavItem[] = [
   { href: "/tutor/settings", label: "Settings", icon: Settings },
 ];
 
+import Logo from "../shared/Logo";
+
 export default function Sidebar({ role }: { role: "student" | "tutor" }) {
   const pathname = usePathname();
   const navItems = role === "tutor" ? tutorNav : studentNav;
 
   return (
     <aside className="hidden w-64 shrink-0 border-r border-white/10 bg-slate-950 lg:block">
-      <div className="flex h-full flex-col">
+      <div className="h-full flex flex-col">
         <div className="border-b border-white/10 p-6">
-          <Link
-            href="/"
-            className="text-base font-black uppercase tracking-[0.4em] text-white"
-          >
-            SBETUTOR
-          </Link>
-          <p className="mt-1 text-xs uppercase tracking-[0.3em] text-slate-500">
-            {role} dashboard
+          <Logo className="-ml-1" />
+          <p className="mt-2 text-[10px] uppercase tracking-[0.3em] text-slate-500 font-bold">
+            {role} portal
           </p>
         </div>
         <nav className="flex-1 space-y-1 p-4">
