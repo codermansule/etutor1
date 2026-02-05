@@ -57,9 +57,19 @@ export default function RegisterPage() {
         },
         { ignoreDuplicates: true },
       );
+
+      // Send welcome email via our own SMTP (bypasses Supabase email)
+      fetch("/api/auth/welcome-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, fullName }),
+      }).catch(() => {});
     }
 
-    setStatus("Registration successful! Please check your email for a verification link.");
+    setStatus("Registration successful! Welcome to ETUTOR. Redirecting...");
+    setTimeout(() => {
+      window.location.href = role === "tutor" ? "/tutor" : "/student";
+    }, 1500);
     setLoading(false);
   };
 
