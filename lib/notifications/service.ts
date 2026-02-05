@@ -18,7 +18,7 @@ interface SendNotificationOptions {
 
 /**
  * Sends an internal notification to a user.
- * In a production app, this would also trigger push/email via Resend/WebPush.
+ * In a production app, this would also trigger push/email via Brevo SMTP/WebPush.
  */
 export async function sendNotification({
     userId,
