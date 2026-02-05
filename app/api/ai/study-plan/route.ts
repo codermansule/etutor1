@@ -5,7 +5,7 @@ import { generateStudyPlan } from '@/lib/ai/study-plan-generator';
 export async function POST(req: Request) {
     try {
         const { subjectId, subjectName, goal, experienceLevel } = await req.json();
-        const supabase = createServerClient();
+        const supabase = await createServerClient();
 
         // 1. Check authentication
         const { data: { user } } = await supabase.auth.getUser();

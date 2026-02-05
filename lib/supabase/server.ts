@@ -13,8 +13,8 @@ type ReadonlyCookies = {
   getAll: () => { name: string; value: string }[];
 };
 
-export const createServerClient = () => {
-  const cookieStore = cookies() as unknown as ReadonlyCookies;
+export const createServerClient = async () => {
+  const cookieStore = await cookies();
 
   return createServerSupabaseClient(supabaseUrl, supabaseAnonKey, {
     cookies: {

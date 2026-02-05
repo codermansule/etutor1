@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/student/:path*", "/tutor/:path*"],
+  matcher: ["/dashboard/:path*", "/student/:path*", "/tutor/:path*", "/admin/:path*"],
 };
 
 export async function middleware(req: NextRequest) {

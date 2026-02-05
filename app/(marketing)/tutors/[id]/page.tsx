@@ -12,7 +12,7 @@ export default async function TutorProfilePage({
     params: Promise<{ id: string }>;
 }) {
     const { id } = await params;
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
 
     const { data: tutor } = await supabase
         .from("tutor_profiles")

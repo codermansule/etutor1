@@ -27,7 +27,7 @@ export async function sendNotification({
     type,
     link
 }: SendNotificationOptions) {
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
 
     const { data, error } = await supabase
         .from('notifications')
@@ -54,7 +54,7 @@ export async function sendNotification({
  * Marks a notification as read.
  */
 export async function markAsRead(notificationId: string) {
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
     const { error } = await supabase
         .from('notifications')
         .update({ is_read: true })

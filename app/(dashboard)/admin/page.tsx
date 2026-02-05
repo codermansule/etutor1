@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 
 export default async function AdminDashboardPage() {
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
 
     // Fetch some basic stats
     const { count: studentCount } = await supabase

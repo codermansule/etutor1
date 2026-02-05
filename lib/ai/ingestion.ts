@@ -20,7 +20,7 @@ export async function ingestDocument({
     metadata = {},
     sourceUrl
 }: IngestOptions) {
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
 
     // 1. Chunk the text
     const chunks = chunkText(content, 800); // Larger chunks for better context retention
@@ -72,7 +72,7 @@ export async function ingestDocument({
  * Deletes all knowledge documents for a specific subject (for re-indexing).
  */
 export async function clearKnowledgeBase(subjectId: string) {
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
     const { error } = await supabase
         .from('knowledge_documents')
         .delete()

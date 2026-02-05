@@ -15,7 +15,7 @@ export async function findRelevantContent(
     subjectId?: string,
     limit: number = 3
 ): Promise<string> {
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
     const embedding = await generateEmbedding(query);
 
     const { data: documents, error } = await supabase.rpc('match_documents', {

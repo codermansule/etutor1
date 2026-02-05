@@ -5,7 +5,7 @@ import { ingestDocument } from '@/lib/ai/ingestion';
 export async function POST(req: Request) {
     try {
         const { title, content, subjectId, metadata, sourceUrl } = await req.json();
-        const supabase = createServerClient();
+        const supabase = await createServerClient();
 
         // 1. Verify admin/tutor role
         const { data: { user } } = await supabase.auth.getUser();

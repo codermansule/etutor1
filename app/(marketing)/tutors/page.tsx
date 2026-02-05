@@ -15,7 +15,7 @@ export default async function TutorsPage({
     searchParams: Promise<{ q?: string; subject?: string; minPrice?: string; maxPrice?: string }>;
 }) {
     const { q, subject, minPrice, maxPrice } = await searchParams;
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
 
     // Build query
     let query = supabase

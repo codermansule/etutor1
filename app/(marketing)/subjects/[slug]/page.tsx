@@ -18,7 +18,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
   const { data: subject } = await supabase
     .from("subjects")
     .select("name, description")
@@ -46,7 +46,7 @@ const categoryLabels: Record<string, string> = {
 
 export default async function SubjectPage({ params }: Props) {
   const { slug } = await params;
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
 
   const { data: subject } = await supabase
     .from("subjects")

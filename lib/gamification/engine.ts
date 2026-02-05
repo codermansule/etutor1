@@ -23,7 +23,7 @@ export const XP_VALUES: Record<string, { xp: number, coins: number }> = {
 };
 
 export async function awardXP(userId: string, event: GamificationEvent, referenceId?: string, description?: string) {
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
     const reward = XP_VALUES[event] || { xp: 0, coins: 0 };
 
     if (reward.xp === 0 && reward.coins === 0) return;
@@ -75,7 +75,7 @@ export async function awardXP(userId: string, event: GamificationEvent, referenc
 }
 
 export async function updateStreak(userId: string) {
-    const supabase = createServerClient();
+    const supabase = await createServerClient();
     const today = new Date().toISOString().split('T')[0];
 
     try {

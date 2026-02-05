@@ -5,7 +5,7 @@ import { generateQuiz } from '@/lib/ai/quiz-generator';
 export async function POST(req: Request) {
     try {
         const { subjectId, topics, difficulty = 'adaptive' } = await req.json();
-        const supabase = createServerClient();
+        const supabase = await createServerClient();
 
         // 1. Auth check
         const { data: { user } } = await supabase.auth.getUser();

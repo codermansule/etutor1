@@ -36,7 +36,7 @@ const categoryOrder = [
 ];
 
 export default async function SubjectsPage() {
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
 
   const { data: subjectsData } = await supabase
     .from("subjects")

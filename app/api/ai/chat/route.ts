@@ -7,7 +7,7 @@ import { findRelevantContent } from '@/lib/ai/vector-search';
 export async function POST(req: Request) {
     try {
         const { messages, subjectId, mode = 'chat' } = await req.json();
-        const supabase = createServerClient();
+        const supabase = await createServerClient();
 
         // Check authentication
         const { data: { user } } = await supabase.auth.getUser();

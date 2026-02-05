@@ -90,7 +90,7 @@ const subjectFallback: Subject[] = [
 ];
 
 export default async function Home() {
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
   const { data: subjectsData } = await supabase
     .from("subjects")
     .select("id, name, category, description")
