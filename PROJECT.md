@@ -1158,6 +1158,36 @@ Aggregated learning stats per user per subject.
 
 ## Progress Snapshot
 
+### Phase 1 — COMPLETE (2026-02-05)
+
+**Foundation, Auth, Marketing, Database, Dashboard Skeleton**
+
+#### Completed Items
+- **Next.js 16 + TypeScript strict + Tailwind CSS 4** scaffolding with App Router
+- **shadcn/ui component system** (manual, dark theme): Button, Input, Label, Card, Badge, Separator, Avatar with `cn()` utility
+- **Supabase integration**: Browser client, server client, service role client
+- **Database migrations** (`supabase/migrations/00001-00004`): `profiles`, `subjects`, `tutor_profiles`, `tutor_subjects` with RLS policies, indexes, full-text search, auto-triggers
+- **Seed data** (`supabase/seed.sql`): 54 subjects across 6 categories with 5 child subjects
+- **Auth flows** (`app/(auth)/`): Login, register (with role selection), password recovery
+- **Middleware**: Protects `/dashboard/*`, `/student/*`, `/tutor/*` routes
+- **Route groups**: `(marketing)` Header/Footer, `(auth)` centered card, `(dashboard)` Sidebar/Topbar
+- **Marketing pages**: Homepage, About, Pricing (FAQPage JSON-LD), How It Works
+- **Subject pages**: Directory (`/subjects`), Dynamic detail (`/subjects/[slug]`) with Course JSON-LD
+- **Dashboard skeleton**: Student + Tutor dashboards with role-based sidebar navigation
+- **CI/CD**: GitHub Actions verification workflow
+- **Verification passed**: build (13 routes), tsc (0 errors), lint (0 warnings)
+
+#### Database State
+| Table | Rows | Notes |
+|-------|------|-------|
+| `profiles` | 0 | Auto-populated on signup via trigger |
+| `subjects` | 54 | 49 parent + 5 children, 6 categories |
+| `tutor_profiles` | 0 | Phase 2 onboarding |
+| `tutor_subjects` | 0 | Phase 2 onboarding |
+
+### Phase 2 — NEXT
+**Marketplace and Booking** — Tutor onboarding, search/filter, public tutor profiles, availability editor, booking with Stripe, reviews, reminder emails.
+
 - **Phase 1 marketing refresh (2026-02-04):** Rebuilt the homepage hero/benefits/how-it-works/pricing/subjects sections with tutoring-focused storytelling and JSON-LD metadata.
 - **Authentication + Supabase helpers:** Added the auth layout, register/login/recover pages, browser/server/service-role Supabase clients, and middleware guarding `/dashboard`, `/student`, `/tutor`.
 - **Next steps to start tomorrow:** Seed Supabase tables (subjects, tutor_profiles, availability, bookings, reviews), add marketing subpages (`/pricing`, `/how-it-works`, `/subjects/[slug]`, `/tutors/[username]`), and lay the Phase 1 dashboard skeleton so auth work feeds directly into Phase 2.

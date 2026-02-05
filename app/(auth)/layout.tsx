@@ -11,22 +11,31 @@ export default function AuthLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="min-h-screen bg-slate-950 py-16 text-white">
-      <div className="mx-auto flex w-full max-w-xl flex-col gap-4 rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-[0_40px_80px_rgba(2,6,23,0.7)]">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 px-4 py-16 text-white">
+      <div className="w-full max-w-xl space-y-4 rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-[0_40px_80px_rgba(2,6,23,0.7)]">
         <div className="flex justify-between">
           <div>
-            <Link href="/" className="text-lg font-bold uppercase tracking-[0.3em] text-sky-300">
+            <Link
+              href="/"
+              className="text-lg font-bold uppercase tracking-[0.3em] text-sky-300"
+            >
               SBETUTOR
             </Link>
             <p className="text-xs uppercase tracking-[0.4em] text-slate-500">
-              Phase 1 Auth
+              Authentication
             </p>
           </div>
           <nav className="flex items-center gap-3 text-xs uppercase tracking-[0.3em]">
-            <Link href="/(auth)/register" className="text-slate-300 hover:text-white">
+            <Link
+              href="/(auth)/register"
+              className="text-slate-300 hover:text-white"
+            >
               Register
             </Link>
-            <Link href="/(auth)/login" className="text-slate-300 hover:text-white">
+            <Link
+              href="/(auth)/login"
+              className="text-slate-300 hover:text-white"
+            >
               Login
             </Link>
           </nav>

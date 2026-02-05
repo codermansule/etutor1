@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -19,12 +17,12 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "SBETUTOR | Preply-style tutoring + AI classroom",
   description:
-    "Phase 1 foundation for SBETUTOR: Next.js + Supabase, auth flows, marketing, and verification automation.",
+    "Online tutoring marketplace with expert human tutors, AI coaching, live video classrooms, and gamified learning.",
   metadataBase: new URL("https://sb-e-tutor.example.com"),
   openGraph: {
     title: "SBETUTOR | Preply-style tutoring + AI classroom",
     description:
-      "Build a hybrid tutoring marketplace with Supabase, LiveKit, AI tutors, and gamification.",
+      "Online tutoring marketplace with expert human tutors, AI coaching, live video classrooms, and gamified learning.",
     url: "https://sb-e-tutor.example.com",
     siteName: "SBETUTOR",
     type: "website",
@@ -33,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "SBETUTOR | Preply-style tutoring + AI classroom",
     description:
-      "Phase 1 foundation for SBETUTOR: Next.js + Supabase, auth flows, marketing, and verification automation.",
+      "Online tutoring marketplace with expert human tutors, AI coaching, live video classrooms, and gamified learning.",
   },
   icons: {
     icon: "/favicon.ico",
@@ -51,13 +49,7 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} bg-slate-950 text-slate-100 antialiased`}
       >
-        <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900">
-          <Header />
-          <div className="mx-auto flex w-full max-w-6xl flex-col px-4 py-10 lg:px-8">
-            {children}
-          </div>
-          <Footer />
-        </div>
+        {children}
       </body>
     </html>
   );

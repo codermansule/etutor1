@@ -1,10 +1,10 @@
 import Link from "next/link";
 
 const navItems = [
-  { href: "#features", label: "Phase 1 scope" },
-  { href: "#timeline", label: "Delivery board" },
-  { href: "#verification", label: "Verification" },
-  { href: "https://github.com/codermansule/etutor1", label: "Repository" },
+  { href: "/about", label: "About" },
+  { href: "/how-it-works", label: "How it works" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/subjects", label: "Subjects" },
 ];
 
 export default function Header() {
@@ -13,7 +13,7 @@ export default function Header() {
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-slate-300 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="text-base font-black text-white tracking-[0.4em] transition hover:text-sky-400"
+          className="text-base font-black tracking-[0.4em] text-white transition hover:text-sky-400"
         >
           SBETUTOR
         </Link>
@@ -30,10 +30,16 @@ export default function Header() {
         </nav>
         <div className="flex items-center gap-2">
           <Link
-            href="/"
-            className="rounded-full border border-white/40 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:border-sky-400 hover:text-sky-300"
+            href="/(auth)/login"
+            className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-300 transition hover:text-white"
           >
-            View roadmap
+            Log in
+          </Link>
+          <Link
+            href="/(auth)/register"
+            className="rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-950 transition hover:brightness-110"
+          >
+            Sign up
           </Link>
         </div>
       </div>
