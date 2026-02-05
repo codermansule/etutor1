@@ -25,7 +25,7 @@ export default async function DashboardLayout({
     .eq("id", user.id)
     .single();
 
-  const role = (profile?.role as "student" | "tutor") ?? "student";
+  const role = (profile?.role as "student" | "tutor" | "admin") ?? "student";
   const userName = profile?.full_name ?? user.email ?? "User";
 
   const headersList = await headers();

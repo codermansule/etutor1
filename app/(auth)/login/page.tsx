@@ -3,72 +3,97 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createBrowserClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Loader2, AlertCircle } from "lucide-react";
+import SocialAuth from "@/components/features/auth/SocialAuth";
 
 const supabase = createBrowserClient();
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
-  const [status, setStatus] = useState<null | string>(null);
+  const [error, setError] = useState<null | string>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setStatus(null);
+    setError(null);
     setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword(form);
 
     if (error) {
-      setStatus(error.message);
+      setError(error.message);
       setLoading(false);
       return;
     }
 
-    setStatus("Signed in successfully! Redirecting to dashboard...");
-    setLoading(false);
-    // Redirect handled by middleware or useRouter push if needed.
+    // Redirecting feedback
+    setLoading(true);
+    window.location.href = "/student"; // Default redirect
   };
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
-      <h1 className="text-2xl font-semibold text-white">Welcome back to SBETUTOR</h1>
-      <p className="text-sm text-slate-400">Use the same email you registered with.</p>
-      <label className="block text-sm text-slate-300">
-        Email
-        <input
-          type="email"
-          name="email"
-          value={form.email}
-          onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
-          required
-          className="mt-1 w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white"
-        />
-      </label>
-      <label className="block text-sm text-slate-300">
-        Password
-        <input
-          type="password"
-          name="password"
-          value={form.password}
-          onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
-          required
-          className="mt-1 w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white"
-        />
-      </label>
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full rounded-2xl bg-gradient-to-r from-slate-700 to-slate-500 px-4 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-white"
-      >
-        {loading ? "Signing in..." : "Sign in"}
-      </button>
-      <p className="text-center text-xs text-slate-500">
-        Forgot your password?{" "}
-        <Link href="/recover" className="text-sky-400 underline">
-          Request reset
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-black text-white tracking-tight">Welcome back to ETUTOR</h1>
+        <p className="text-sm text-slate-400">Enter your credentials to access your dashboard.</p>
+      </div>
+
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-slate-300">Email Address</label>
+          <Input
+            type="email"
+            placeholder="name@example.com"
+            value={form.email}
+            onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
+            required
+            className="h-12 rounded-2xl border-white/10 bg-slate-950 px-4 text-white focus:ring-sky-500/50"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <label className="text-sm font-bold text-slate-300">Password</label>
+            <Link href="/recover" className="text-xs text-sky-400 hover:text-sky-300 font-medium">
+              Forgot password?
+            </Link>
+          </div>
+          <Input
+            type="password"
+            placeholder="••••••••"
+            value={form.password}
+            onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
+            required
+            className="h-12 rounded-2xl border-white/10 bg-slate-950 px-4 text-white focus:ring-sky-500/50"
+          />
+        </div>
+
+        {error && (
+          <div className="flex items-center gap-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm animate-in fade-in zoom-in-95">
+            <AlertCircle className="h-4 w-4" />
+            <p>{error}</p>
+          </div>
+        )}
+
+        <Button
+          type="submit"
+          disabled={loading}
+          className="w-full h-12 rounded-2xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-black uppercase tracking-widest transition-all"
+        >
+          {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Sign In"}
+        </Button>
+      </form>
+
+      <SocialAuth />
+
+      <p className="text-center text-sm text-slate-500">
+        Don&apos;t have an account?{" "}
+        <Link href="/register" className="text-white font-bold hover:text-sky-400 transition">
+          Sign up for free
         </Link>
       </p>
-      {status && <p className="text-sm text-slate-300">{status}</p>}
-    </form>
+    </div>
   );
 }

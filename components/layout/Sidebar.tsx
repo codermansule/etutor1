@@ -46,11 +46,21 @@ const tutorNav: NavItem[] = [
   { href: "/tutor/settings", label: "Settings", icon: Settings },
 ];
 
+const adminNav: NavItem[] = [
+  { href: "/admin", label: "System Overview", icon: Home },
+  { href: "/admin/users", label: "User Management", icon: Users },
+  { href: "/admin/tutors", label: "Tutor Approval", icon: Users },
+  { href: "/admin/subjects", label: "Subjects & Skills", icon: BookOpen },
+  { href: "/admin/ingestion", label: "AI Knowledge", icon: BrainCircuit },
+  { href: "/admin/analytics", label: "Global Analytics", icon: BarChart3 },
+  { href: "/admin/settings", label: "Site Settings", icon: Settings },
+];
+
 import Logo from "../shared/Logo";
 
-export default function Sidebar({ role }: { role: "student" | "tutor" }) {
+export default function Sidebar({ role }: { role: "student" | "tutor" | "admin" }) {
   const pathname = usePathname();
-  const navItems = role === "tutor" ? tutorNav : studentNav;
+  const navItems = role === "admin" ? adminNav : role === "tutor" ? tutorNav : studentNav;
 
   return (
     <aside className="hidden w-64 shrink-0 border-r border-white/10 bg-slate-950 lg:block">

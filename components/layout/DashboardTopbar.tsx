@@ -13,7 +13,7 @@ export default function DashboardTopbar({
   role,
 }: {
   userName: string;
-  role: "student" | "tutor";
+  role: "student" | "tutor" | "admin";
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
