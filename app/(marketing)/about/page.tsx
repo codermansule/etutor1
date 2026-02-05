@@ -134,7 +134,7 @@ export default function AboutPage() {
         </p>
         <div className="mt-6 flex justify-center gap-3">
           <a
-            href="/(auth)/register"
+            href="/register"
             className="rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-8 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-950 transition hover:brightness-110"
           >
             Create free account

@@ -30,13 +30,13 @@ export default function Header() {
         </nav>
         <div className="flex items-center gap-2">
           <Link
-            href="/(auth)/login"
+            href="/login"
             className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-300 transition hover:text-white"
           >
             Log in
           </Link>
           <Link
-            href="/(auth)/register"
+            href="/register"
             className="rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-950 transition hover:brightness-110"
           >
             Sign up

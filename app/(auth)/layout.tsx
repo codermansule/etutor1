@@ -27,13 +27,13 @@ export default function AuthLayout({
           </div>
           <nav className="flex items-center gap-3 text-xs uppercase tracking-[0.3em]">
             <Link
-              href="/(auth)/register"
+              href="/register"
               className="text-slate-300 hover:text-white"
             >
               Register
             </Link>
             <Link
-              href="/(auth)/login"
+              href="/login"
               className="text-slate-300 hover:text-white"
             >
               Login

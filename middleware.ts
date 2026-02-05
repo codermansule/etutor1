@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest) {
   const refreshToken = req.cookies.get("sb-refresh-token");
 
   if (!accessToken && !refreshToken) {
-    const loginUrl = new URL("/(auth)/login", req.url);
+    const loginUrl = new URL("/login", req.url);
     loginUrl.searchParams.set("redirectedFrom", req.url);
     return NextResponse.redirect(loginUrl);
   }

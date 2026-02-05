@@ -147,7 +147,7 @@ export default function PricingPage() {
               ))}
             </ul>
             <Link
-              href="/(auth)/register"
+              href="/register"
               className={`mt-8 block rounded-full px-6 py-3 text-center text-xs font-semibold uppercase tracking-[0.3em] transition ${
                 plan.highlighted
                   ? "bg-gradient-to-r from-sky-500 to-cyan-400 text-slate-950 hover:brightness-110"

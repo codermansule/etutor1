@@ -64,7 +64,7 @@ export default function LoginPage() {
       </button>
       <p className="text-center text-xs text-slate-500">
         Forgot your password?{" "}
-        <Link href="/(auth)/recover" className="text-sky-400 underline">
+        <Link href="/recover" className="text-sky-400 underline">
           Request reset
         </Link>
       </p>
