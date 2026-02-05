@@ -28,9 +28,33 @@ export default function LoginPage() {
       return;
     }
 
-    // Redirecting feedback
-    setLoading(true);
-    window.location.href = "/student"; // Default redirect
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
+
+    if (user) {
+      // Super Admin check
+      if (user.email === "admin@etutor.studybitests.com") {
+        window.location.href = "/admin";
+        return;
+      }
+
+      // Fetch profile for role-based redirect
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      if (profile?.role === "admin") {
+        window.location.href = "/admin";
+      } else if (profile?.role === "tutor") {
+        window.location.href = "/tutor";
+      } else {
+        window.location.href = "/student";
+      }
+    } else {
+      window.location.href = "/student";
+    }
   };
 
   return (
