@@ -5,10 +5,12 @@ export const config = {
 };
 
 export async function middleware(req: NextRequest) {
-  const accessToken = req.cookies.get("sb-access-token");
-  const refreshToken = req.cookies.get("sb-refresh-token");
+  // Supabase auth-helpers stores session in a cookie named sb-<project-ref>-auth-token
+  const hasAuthCookie = req.cookies.getAll().some(
+    (cookie) => cookie.name.startsWith("sb-") && cookie.name.includes("auth-token")
+  );
 
-  if (!accessToken && !refreshToken) {
+  if (!hasAuthCookie) {
     const loginUrl = new URL("/login", req.url);
     loginUrl.searchParams.set("redirectedFrom", req.url);
     return NextResponse.redirect(loginUrl);
