@@ -1,17 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { createBrowserClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, AlertCircle, GraduationCap, User } from "lucide-react";
+import { Loader2, AlertCircle, GraduationCap, User, Gift } from "lucide-react";
 import SocialAuth from "@/components/features/auth/SocialAuth";
 import { cn } from "@/lib/utils";
 
 const supabase = createBrowserClient();
 
 export default function RegisterPage() {
+  return (
+    <Suspense>
+      <RegisterForm />
+    </Suspense>
+  );
+}
+
+function RegisterForm() {
+  const searchParams = useSearchParams();
+  const refCode = searchParams.get("ref") ?? "";
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -65,6 +76,15 @@ export default function RegisterPage() {
         body: JSON.stringify({ email, fullName }),
       }).catch(() => {});
 
+      // Complete referral if a code was provided
+      if (refCode) {
+        fetch("/api/referrals", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ referralCode: refCode }),
+        }).catch(() => {});
+      }
+
       // Sign in immediately since email confirmation is disabled
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
@@ -88,6 +108,13 @@ export default function RegisterPage() {
         <h1 className="text-3xl font-black text-white tracking-tight">Join ETUTOR</h1>
         <p className="text-sm text-slate-400">Scale your learning or teaching journey today.</p>
       </div>
+
+      {refCode && (
+        <div className="flex items-center gap-2 p-3 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 text-sm">
+          <Gift className="h-4 w-4 shrink-0" />
+          <p>You were referred! You&apos;ll both earn bonus XP.</p>
+        </div>
+      )}
 
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="grid gap-4 md:grid-cols-2">

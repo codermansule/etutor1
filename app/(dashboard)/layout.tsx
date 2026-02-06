@@ -47,9 +47,13 @@ export default async function DashboardLayout({
   // We can do this on every day's first visit
   try {
     const { updateStreak, awardXP } = await import("@/lib/gamification/engine");
+    const { checkBadges } = await import("@/lib/gamification/badges");
+    const { autoJoinChallenges } = await import("@/lib/gamification/challenges");
     const streakResult = await updateStreak(user.id);
     if (streakResult.success && !streakResult.alreadyUpdatedToday) {
       await awardXP(user.id, 'daily_login');
+      await checkBadges(user.id);
+      await autoJoinChallenges(user.id);
     }
   } catch (error) {
     console.error("Failed to update streak:", error);

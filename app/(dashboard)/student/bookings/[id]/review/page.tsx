@@ -63,6 +63,21 @@ export default function ReviewPage({ params }: { params: { id: string } }) {
 
             if (error) throw error;
 
+            // Award XP for writing a review
+            try {
+                await fetch('/api/gamification/award', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        event: 'review_written',
+                        referenceId: params.id,
+                        description: `Reviewed tutoring session`,
+                    }),
+                });
+            } catch {
+                // Don't block review submission if XP award fails
+            }
+
             alert("Review submitted! Thank you for your feedback.");
             router.push("/student/my-lessons");
         } catch (err) {

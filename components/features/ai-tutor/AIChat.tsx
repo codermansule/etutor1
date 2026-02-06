@@ -62,8 +62,7 @@ export default function AIChat({ subjectId }: AIChatProps) {
         }
     };
 
-    const handleQuizComplete = async (score: number) => {
-        // Award XP logic would go here
+    const handleQuizComplete = async (score: number, xpEarned?: number) => {
         setActiveQuiz(null);
     };
 

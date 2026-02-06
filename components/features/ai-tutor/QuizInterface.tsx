@@ -23,7 +23,7 @@ interface QuizRecord {
 
 interface QuizInterfaceProps {
     quiz: QuizRecord;
-    onComplete: (score: number) => void;
+    onComplete: (score: number, xpEarned?: number) => void;
     onClose: () => void;
 }
 
@@ -32,7 +32,10 @@ export default function QuizInterface({ quiz, onComplete, onClose }: QuizInterfa
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
     const [isAnswered, setIsAnswered] = useState(false);
     const [score, setScore] = useState(0);
+    const [answers, setAnswers] = useState<Record<string, string>>({});
     const [showResults, setShowResults] = useState(false);
+    const [xpEarned, setXpEarned] = useState<number | null>(null);
+    const [awarding, setAwarding] = useState(false);
 
     const currentQuestion = quiz.questions[currentStep];
     const progress = ((currentStep + 1) / quiz.questions.length) * 100;
@@ -44,18 +47,56 @@ export default function QuizInterface({ quiz, onComplete, onClose }: QuizInterfa
 
     const handleConfirm = () => {
         setIsAnswered(true);
+        if (selectedAnswer) {
+            setAnswers(prev => ({ ...prev, [currentQuestion.id]: selectedAnswer }));
+        }
         if (selectedAnswer === currentQuestion.correctAnswer) {
             setScore(prev => prev + 1);
         }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (currentStep < quiz.questions.length - 1) {
             setCurrentStep(prev => prev + 1);
             setSelectedAnswer(null);
             setIsAnswered(false);
         } else {
             setShowResults(true);
+            const finalCorrect = score + (selectedAnswer === quiz.questions[currentStep].correctAnswer ? 1 : 0);
+            const finalScoreNum = Math.round((finalCorrect / quiz.questions.length) * 100);
+
+            setAwarding(true);
+            try {
+                // Save quiz attempt and award XP in parallel
+                const [, awardResp] = await Promise.all([
+                    fetch('/api/ai/quiz/attempt', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            quizId: quiz.id,
+                            answers,
+                            score: finalScoreNum,
+                            correctCount: finalCorrect,
+                            totalCount: quiz.questions.length,
+                        }),
+                    }).catch(() => null),
+                    fetch('/api/gamification/award', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            event: 'quiz_completed',
+                            referenceId: quiz.id,
+                            description: `Completed quiz: ${quiz.title} (${finalScoreNum}%)`,
+                        }),
+                    }),
+                ]);
+                const data = await awardResp.json();
+                if (data.xpEarned) setXpEarned(data.xpEarned);
+            } catch {
+                // Don't break the quiz flow
+            } finally {
+                setAwarding(false);
+            }
         }
     };
 
@@ -85,12 +126,14 @@ export default function QuizInterface({ quiz, onComplete, onClose }: QuizInterfa
                     </div>
                     <div className="p-6 rounded-3xl bg-slate-900/50 border border-white/5">
                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">XP Earned</p>
-                        <p className="text-2xl font-black text-sky-400">+50</p>
+                        <p className="text-2xl font-black text-sky-400">
+                            {awarding ? '...' : xpEarned !== null ? `+${xpEarned}` : '+20'}
+                        </p>
                     </div>
                 </div>
 
                 <div className="flex flex-col w-full max-w-sm gap-3">
-                    <Button onClick={() => onComplete(score)} className="bg-sky-500 hover:bg-sky-400 text-slate-950 font-black h-12 rounded-2xl uppercase tracking-widest">
+                    <Button onClick={() => onComplete(score, xpEarned ?? undefined)} className="bg-sky-500 hover:bg-sky-400 text-slate-950 font-black h-12 rounded-2xl uppercase tracking-widest">
                         Claim Rewards
                     </Button>
                     <Button onClick={onClose} variant="ghost" className="text-slate-400 hover:text-white uppercase font-bold text-[10px] tracking-widest">

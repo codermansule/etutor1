@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceRoleClient } from "@/lib/supabase/server";
+import { awardXPWithClient } from "@/lib/gamification/engine";
+import { updateStreakWithClient } from "@/lib/gamification/engine";
+import { checkBadges } from "@/lib/gamification/badges";
+import { updateChallengeProgress } from "@/lib/gamification/challenges";
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,7 +21,7 @@ export async function POST(req: NextRequest) {
     // Fetch the session to calculate duration
     const { data: session } = await supabase
       .from("sessions")
-      .select("id, started_at, status")
+      .select("id, started_at, status, student_id")
       .eq("id", sessionId)
       .single();
 
@@ -56,7 +60,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // TODO: Trigger post-session actions (XP award, notifications, etc.)
+    // Award XP to student for completing the lesson
+    if (session.student_id) {
+      try {
+        await awardXPWithClient(supabase, session.student_id, 'lesson_completed', sessionId, 'Completed a tutoring session');
+        await updateStreakWithClient(supabase, session.student_id);
+        await checkBadges(session.student_id, supabase);
+        await updateChallengeProgress(session.student_id, 'lesson_completed', supabase);
+      } catch (xpError) {
+        console.error('Failed to award XP:', xpError);
+        // Don't fail the session end if XP awarding fails
+      }
+    }
 
     return NextResponse.json({
       message: "Session ended",

@@ -47,13 +47,33 @@ export default async function StudentDashboard() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name")
-    .eq("id", user?.id ?? "")
-    .single();
+  const userId = user?.id ?? "";
 
+  const [profileRes, xpRes, streakRes, lessonsRes] = await Promise.all([
+    supabase.from("profiles").select("full_name").eq("id", userId).single(),
+    supabase.from("user_xp").select("total_xp, current_level").eq("id", userId).single(),
+    supabase.from("user_streaks").select("current_streak").eq("id", userId).single(),
+    supabase
+      .from("bookings")
+      .select("id", { count: "exact", head: true })
+      .eq("student_id", userId)
+      .eq("status", "completed"),
+  ]);
+
+  const profile = profileRes.data;
   const firstName = profile?.full_name?.split(" ")[0] ?? "Student";
+  const totalXp = xpRes.data?.total_xp ?? 0;
+  const currentLevel = xpRes.data?.current_level ?? 1;
+  const currentStreak = streakRes.data?.current_streak ?? 0;
+  const completedLessons = lessonsRes.count ?? 0;
+
+  // Resolve level title
+  const { data: levelData } = await supabase
+    .from("levels")
+    .select("title")
+    .eq("number", currentLevel)
+    .single();
+  const levelTitle = levelData?.title ?? "Beginner";
 
   return (
     <div className="space-y-8">
@@ -72,9 +92,13 @@ export default async function StudentDashboard() {
             <Flame className="h-4 w-4 text-orange-400" />
             <span className="text-xs uppercase tracking-[0.2em]">Streak</span>
           </div>
-          <p className="mt-2 text-3xl font-semibold text-white">0 days</p>
+          <p className="mt-2 text-3xl font-semibold text-white">
+            {currentStreak} {currentStreak === 1 ? "day" : "days"}
+          </p>
           <p className="mt-1 text-xs text-slate-500">
-            Complete a lesson or quiz to start
+            {currentStreak === 0
+              ? "Complete a lesson or quiz to start"
+              : "Keep it going!"}
           </p>
         </div>
         <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
@@ -82,8 +106,12 @@ export default async function StudentDashboard() {
             <Star className="h-4 w-4 text-sky-400" />
             <span className="text-xs uppercase tracking-[0.2em]">XP</span>
           </div>
-          <p className="mt-2 text-3xl font-semibold text-white">0</p>
-          <p className="mt-1 text-xs text-slate-500">Level 1 — Beginner</p>
+          <p className="mt-2 text-3xl font-semibold text-white">
+            {totalXp.toLocaleString()}
+          </p>
+          <p className="mt-1 text-xs text-slate-500">
+            Level {currentLevel} — {levelTitle}
+          </p>
         </div>
         <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
           <div className="flex items-center gap-2 text-slate-400">
@@ -92,8 +120,14 @@ export default async function StudentDashboard() {
               Lessons
             </span>
           </div>
-          <p className="mt-2 text-3xl font-semibold text-white">0</p>
-          <p className="mt-1 text-xs text-slate-500">No upcoming lessons</p>
+          <p className="mt-2 text-3xl font-semibold text-white">
+            {completedLessons}
+          </p>
+          <p className="mt-1 text-xs text-slate-500">
+            {completedLessons === 0
+              ? "No completed lessons yet"
+              : `${completedLessons} lesson${completedLessons === 1 ? "" : "s"} completed`}
+          </p>
         </div>
       </div>
 

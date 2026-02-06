@@ -1,5 +1,6 @@
 import { createServerClient } from '@/lib/supabase/server';
 import { sendNotification } from '@/lib/notifications/service';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 export type GamificationEvent =
     | 'lesson_completed'
@@ -22,14 +23,21 @@ export const XP_VALUES: Record<string, { xp: number, coins: number }> = {
     badge_earned: { xp: 25, coins: 5 },
 };
 
-export async function awardXP(userId: string, event: GamificationEvent, referenceId?: string, description?: string) {
-    const supabase = await createServerClient();
+/**
+ * Award XP using a provided Supabase client (for API routes / service-role contexts).
+ */
+export async function awardXPWithClient(
+    supabase: SupabaseClient,
+    userId: string,
+    event: GamificationEvent,
+    referenceId?: string,
+    description?: string
+) {
     const reward = XP_VALUES[event] || { xp: 0, coins: 0 };
 
-    if (reward.xp === 0 && reward.coins === 0) return;
+    if (reward.xp === 0 && reward.coins === 0) return { success: true, xpEarned: 0, coinsEarned: 0 };
 
     try {
-        // 1. Log the transaction
         const finalDescription = description || `Awarded for ${event.replace('_', ' ')}`;
         await supabase.from('xp_transactions').insert({
             user_id: userId,
@@ -40,7 +48,6 @@ export async function awardXP(userId: string, event: GamificationEvent, referenc
             description: finalDescription
         });
 
-        // 2. Update user_xp table
         const { data: currentXp } = await supabase
             .from('user_xp')
             .select('total_xp, coins')
@@ -59,23 +66,37 @@ export async function awardXP(userId: string, event: GamificationEvent, referenc
             })
             .eq('id', userId);
 
-        // 3. Send notification
-        await sendNotification({
-            userId,
-            title: `+${reward.xp} XP Earned!`,
-            message: finalDescription,
-            type: event === 'badge_earned' ? 'badge_earned' : 'xp_milestone'
-        });
+        // Notification — best-effort, don't block on failure
+        try {
+            await sendNotification({
+                userId,
+                title: `+${reward.xp} XP Earned!`,
+                message: finalDescription,
+                type: event === 'badge_earned' ? 'badge_earned' : 'xp_milestone'
+            });
+        } catch {
+            // notifications use cookie-based client; may fail in service-role context
+        }
 
         return { success: true, xpEarned: reward.xp, coinsEarned: reward.coins };
     } catch (error) {
         console.error('Error awarding XP:', error);
-        return { success: false, error };
+        return { success: false, xpEarned: 0, coinsEarned: 0, error };
     }
 }
 
-export async function updateStreak(userId: string) {
+/**
+ * Award XP using cookie-based server client (for server components / server actions).
+ */
+export async function awardXP(userId: string, event: GamificationEvent, referenceId?: string, description?: string) {
     const supabase = await createServerClient();
+    return awardXPWithClient(supabase, userId, event, referenceId, description);
+}
+
+/**
+ * Update streak using a provided Supabase client.
+ */
+export async function updateStreakWithClient(supabase: SupabaseClient, userId: string) {
     const today = new Date().toISOString().split('T')[0];
 
     try {
@@ -86,7 +107,6 @@ export async function updateStreak(userId: string) {
             .single();
 
         if (!streak) {
-            // Initialize streak
             await supabase.from('user_streaks').insert({
                 id: userId,
                 current_streak: 1,
@@ -110,7 +130,6 @@ export async function updateStreak(userId: string) {
         if (lastDate === yesterdayStr) {
             newStreak = streak.current_streak + 1;
         } else {
-            // Streak broken, but check for freezes if we implement that later
             newStreak = 1;
         }
 
@@ -126,9 +145,8 @@ export async function updateStreak(userId: string) {
             })
             .eq('id', userId);
 
-        // If new streak milestone, award bonus XP
         if (newStreak % 7 === 0) {
-            await awardXP(userId, 'streak_bonus', undefined, `${newStreak} day streak milestone!`);
+            await awardXPWithClient(supabase, userId, 'streak_bonus', undefined, `${newStreak} day streak milestone!`);
         }
 
         return { success: true, newStreak };
@@ -136,4 +154,12 @@ export async function updateStreak(userId: string) {
         console.error('Error updating streak:', error);
         return { success: false, error };
     }
+}
+
+/**
+ * Update streak using cookie-based server client.
+ */
+export async function updateStreak(userId: string) {
+    const supabase = await createServerClient();
+    return updateStreakWithClient(supabase, userId);
 }

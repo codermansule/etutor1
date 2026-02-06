@@ -47,13 +47,74 @@ export default async function TutorDashboard() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name")
-    .eq("id", user?.id ?? "")
-    .single();
+  const userId = user?.id ?? "";
 
+  // Start of this week (Monday)
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  const weekStart = new Date(now);
+  weekStart.setDate(now.getDate() + mondayOffset);
+  weekStart.setHours(0, 0, 0, 0);
+
+  // Start of this month
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const [profileRes, upcomingRes, studentsRes, reviewsRes, earningsRes] =
+    await Promise.all([
+      supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", userId)
+        .single(),
+      // Upcoming lessons this week
+      supabase
+        .from("bookings")
+        .select("id", { count: "exact", head: true })
+        .eq("tutor_id", userId)
+        .in("status", ["confirmed", "pending"])
+        .gte("scheduled_at", weekStart.toISOString()),
+      // Unique students
+      supabase
+        .from("bookings")
+        .select("student_id")
+        .eq("tutor_id", userId)
+        .in("status", ["confirmed", "completed", "in_progress"]),
+      // Average rating
+      supabase
+        .from("reviews")
+        .select("rating")
+        .eq("tutor_id", userId),
+      // Monthly earnings
+      supabase
+        .from("payments")
+        .select("tutor_amount")
+        .eq("tutor_id", userId)
+        .eq("status", "completed")
+        .gte("created_at", monthStart.toISOString()),
+    ]);
+
+  const profile = profileRes.data;
   const firstName = profile?.full_name?.split(" ")[0] ?? "Tutor";
+  const upcomingCount = upcomingRes.count ?? 0;
+
+  // Count unique students
+  const uniqueStudents = new Set(
+    (studentsRes.data ?? []).map((b) => b.student_id)
+  ).size;
+
+  // Average rating
+  const ratings = (reviewsRes.data ?? []).map((r) => r.rating);
+  const avgRating =
+    ratings.length > 0
+      ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1)
+      : null;
+
+  // Monthly earnings
+  const monthlyEarnings = (earningsRes.data ?? []).reduce(
+    (sum, p) => sum + Number(p.tutor_amount ?? 0),
+    0
+  );
 
   return (
     <div className="space-y-8">
@@ -74,8 +135,12 @@ export default async function TutorDashboard() {
               Upcoming
             </span>
           </div>
-          <p className="mt-2 text-3xl font-semibold text-white">0</p>
-          <p className="mt-1 text-xs text-slate-500">lessons this week</p>
+          <p className="mt-2 text-3xl font-semibold text-white">
+            {upcomingCount}
+          </p>
+          <p className="mt-1 text-xs text-slate-500">
+            {upcomingCount === 1 ? "lesson" : "lessons"} this week
+          </p>
         </div>
         <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
           <div className="flex items-center gap-2 text-slate-400">
@@ -84,16 +149,26 @@ export default async function TutorDashboard() {
               Students
             </span>
           </div>
-          <p className="mt-2 text-3xl font-semibold text-white">0</p>
-          <p className="mt-1 text-xs text-slate-500">total students</p>
+          <p className="mt-2 text-3xl font-semibold text-white">
+            {uniqueStudents}
+          </p>
+          <p className="mt-1 text-xs text-slate-500">
+            {uniqueStudents === 1 ? "student" : "total students"}
+          </p>
         </div>
         <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
           <div className="flex items-center gap-2 text-slate-400">
             <BarChart3 className="h-4 w-4 text-amber-400" />
             <span className="text-xs uppercase tracking-[0.2em]">Rating</span>
           </div>
-          <p className="mt-2 text-3xl font-semibold text-white">--</p>
-          <p className="mt-1 text-xs text-slate-500">no reviews yet</p>
+          <p className="mt-2 text-3xl font-semibold text-white">
+            {avgRating ?? "--"}
+          </p>
+          <p className="mt-1 text-xs text-slate-500">
+            {ratings.length > 0
+              ? `${ratings.length} review${ratings.length === 1 ? "" : "s"}`
+              : "no reviews yet"}
+          </p>
         </div>
         <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
           <div className="flex items-center gap-2 text-slate-400">
@@ -102,7 +177,9 @@ export default async function TutorDashboard() {
               Earnings
             </span>
           </div>
-          <p className="mt-2 text-3xl font-semibold text-white">$0</p>
+          <p className="mt-2 text-3xl font-semibold text-white">
+            ${monthlyEarnings.toFixed(0)}
+          </p>
           <p className="mt-1 text-xs text-slate-500">this month</p>
         </div>
       </div>
