@@ -25,7 +25,7 @@ Preply-style online tutoring marketplace with hybrid monetization (marketplace +
 | Video | LiveKit (self-hosted) + `@livekit/components-react` |
 | Payments | Stripe Connect (Express) + Stripe Billing |
 | AI | OpenAI GPT-4o + LangChain.js + Supabase pgvector |
-| Email | Resend |
+| Email | Brevo (nodemailer SMTP) |
 | PWA | Serwist |
 | Analytics | PostHog |
 | Errors | Sentry |
@@ -851,6 +851,7 @@ Aggregated learning stats per user per subject.
 - Rescheduling/cancellation with policy enforcement
 - Package deals and recurring bookings
 - Email + push reminders (24h and 1h before)
+- SafePay option for Pakistani learners (payment instructions provided on-booking)
 
 ### D. Video Classroom (LiveKit)
 - 1-on-1 WebRTC video via LiveKit
@@ -890,6 +891,8 @@ Aggregated learning stats per user per subject.
 - Stripe Checkout for individual lessons
 - Stripe Billing for subscriptions (Free/Basic/Premium tiers)
 - Stripe Connect Express for tutor payouts (automated weekly)
+- SafePay fallback recorded in bookings (status `awaiting_payment`) for localized instructions
+- Stripe webhook (`/api/payments/webhook`) marks bookings `confirmed` after Checkout succeeds and powers the `/booking/confirmation` page.
 - Platform commission (configurable, default 15%)
 - Refund handling, promo codes, lesson packages
 
@@ -921,7 +924,7 @@ Aggregated learning stats per user per subject.
 
 ### L. Notification System
 - In-app: Bell icon with dropdown, unread count, Supabase Realtime
-- Email: Resend for booking confirmations, reminders, receipts
+- Email: Brevo SMTP for booking confirmations, reminders, receipts
 - Push: Web Push API for reminders, new messages, achievements
 - User preference toggles per notification type
 
@@ -1062,7 +1065,7 @@ Aggregated learning stats per user per subject.
 - Timezone-aware availability system
 - Booking flow: calendar -> slot selection -> Stripe Checkout -> confirmation
 - Reviews system (post-lesson)
-- Booking confirmation + reminder emails (Resend)
+- Booking confirmation + reminder emails (Brevo SMTP)
 - DB: availability, bookings, reviews, payments + RLS
 
 ### Phase 3: Video Classroom & Messaging
@@ -1127,7 +1130,7 @@ Aggregated learning stats per user per subject.
 | LiveKit | Video conferencing | Open source self-host | $10-20/mo (VPS) |
 | OpenAI | AI tutor, embeddings | Pay-per-use | $50-100/mo |
 | Stripe | Payments | 2.9% + 30c per txn | Transaction-based |
-| Resend | Email | 3K emails/mo | Free |
+| Brevo | Email SMTP | 300 emails/day | Free |
 | PostHog | Analytics | 1M events/mo | Free |
 | Sentry | Error tracking | 5K errors/mo | Free |
 | **Total** | | | **~$105-165/mo** |
@@ -1176,6 +1179,7 @@ Aggregated learning stats per user per subject.
 - **Dashboard skeleton**: Student + Tutor + Admin dashboards with role-based sidebar navigation
 - **CI/CD**: GitHub Actions verification workflow
 - **Build verified**: 32 routes, tsc 0 errors
+- **Custom email flow**: Created `app/api/auth/welcome-email/route.ts` and the register page now skips Supabase confirmation by posting to our Brevo-powered welcome-email endpoint before auto-signing-in; Supabase Custom SMTP is disabled so all onboarding email runs through our verified Brevo sender.
 
 #### Database State (as of Phase 1)
 | Table | Rows | Notes |
@@ -1203,7 +1207,7 @@ Aggregated learning stats per user per subject.
 
 ### Phase 4 — PARTIAL (core infrastructure built)
 
-**AI Tutor & Gamification** — Built: AI Chat/Quiz/Study Plan APIs (GPT-4o + RAG), gamification engine (XP/streaks), notifications, Resend emails, student AI pages, admin dashboard + ingestion, super admin. Not built: Badges, leaderboards, challenges, rewards store, AI tier limits.
+**AI Tutor & Gamification** — Built: AI Chat/Quiz/Study Plan APIs (GPT-4o + RAG), gamification engine (XP/streaks), notifications, Brevo SMTP emails, student AI pages, admin dashboard + ingestion, super admin. Not built: Badges, leaderboards, challenges, rewards store, AI tier limits.
 
 ### Phases 5-6 — NOT STARTED
 
@@ -1221,6 +1225,13 @@ Aggregated learning stats per user per subject.
 3. Stripe Checkout (booking payment)
 4. Reviews system
 5. Public tutor profiles with ISR + JSON-LD
+6. Wire every marketing/dashboard CTA/button to the real pages we already added (`/about`, `/pricing`, `/subjects`, `/tutors`, role dashboards, etc.) so nothing still points to placeholders or old routes.
+
+### Link & Navigation Gaps
+- Landing hero buttons, pricing CTAs, and marketing cards still point to legacy anchors or the root route; they need to route directly to the fleshed-out marketing (`/subjects`, `/tutors`, `/pricing`) and onboarding flows.
+- Dashboard/tutor action buttons (e.g., “Book a lesson”, “View availability”, “Switch to tutor view”) and marketing nav items need reviewing so they hit the correct App Router pages and don’t rely on scaffold placeholders.
+- Any newly created page under `(dashboard)` or `(marketing)` should be reachable via the site nav, footer links, or CTA buttons before we call Phase 2 done.
+- Updated marketing CTAs: hero buttons now land on `/subjects`, `/pricing`, and `/tutors`; placeholder price cards link to `/register` with the chosen plan; the about page CTAs use Next.js `Link`; header nav also gained a direct `Tutors` entry, so everything routes to real App Router screens.
 
 ## Environment Variables Required
 
@@ -1234,6 +1245,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
 STRIPE_SECRET_KEY=
 STRIPE_WEBHOOK_SECRET=
+SAFEPAY_INSTRUCTIONS=Provide SafePay/phone payment instructions (default: call support)
 
 # LiveKit
 LIVEKIT_API_KEY=
@@ -1243,8 +1255,12 @@ NEXT_PUBLIC_LIVEKIT_URL=
 # OpenAI
 OPENAI_API_KEY=
 
-# Resend
-RESEND_API_KEY=
+# Brevo SMTP
+SMTP_HOST=
+SMTP_PORT=
+SMTP_USER=
+SMTP_PASS=
+EMAIL_FROM=
 
 # PostHog
 NEXT_PUBLIC_POSTHOG_KEY=

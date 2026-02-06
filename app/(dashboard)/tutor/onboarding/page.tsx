@@ -9,13 +9,31 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, ChevronRight, ChevronLeft, Loader2, Sparkles, BookOpen, Clock, User } from "lucide-react";
+import { Check, ChevronRight, ChevronLeft, Loader2, Sparkles, BookOpen, Clock, User, Plus, Trash2, MapPin } from "lucide-react";
 
 type Subject = {
     id: string;
     name: string;
     category: string;
 };
+
+type AvailabilitySlot = {
+    day_of_week: number | null;
+    specific_date: string | null;
+    start_time: string;
+    end_time: string;
+    timezone: string;
+};
+
+const DAYS = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+];
 
 export default function TutorOnboarding() {
     const router = useRouter();
@@ -32,7 +50,17 @@ export default function TutorOnboarding() {
         hourly_rate: "25",
     });
     const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
-    const [availability, setAvailability] = useState<any[]>([]);
+    const [availabilitySlots, setAvailabilitySlots] = useState<AvailabilitySlot[]>([]);
+    const [timezone, setTimezone] = useState("UTC");
+    const [weeklySelection, setWeeklySelection] = useState(0);
+    const [overrideDate, setOverrideDate] = useState(() => new Date().toISOString().split("T")[0]);
+
+    useEffect(() => {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (tz) {
+            setTimezone(tz);
+        }
+    }, []);
 
     useEffect(() => {
         async function loadSubjects() {
@@ -65,7 +93,7 @@ export default function TutorOnboarding() {
         setLoading(true);
         try {
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error("No user");
+        if (!user) throw new Error("No user");
 
             // 1. Create/Update Tutor Profile
             const { error: profileErr } = await supabase
@@ -103,6 +131,29 @@ export default function TutorOnboarding() {
 
             if (updateErr) throw updateErr;
 
+            // 4. Persist availability
+            await supabase.from("availability").delete().eq("tutor_id", user.id);
+            if (availabilitySlots.length > 0) {
+                const availabilityData = availabilitySlots
+                    .filter(slot => slot.day_of_week !== null || slot.specific_date)
+                    .map(slot => ({
+                        tutor_id: user.id,
+                        day_of_week: slot.day_of_week,
+                        specific_date: slot.specific_date,
+                        start_time: slot.start_time,
+                        end_time: slot.end_time,
+                        timezone: slot.timezone,
+                    }));
+
+                if (availabilityData.length > 0) {
+                    const { error: availErr } = await supabase
+                        .from("availability")
+                        .insert(availabilityData);
+
+                    if (availErr) throw availErr;
+                }
+            }
+
             router.push("/tutor");
         } catch (err) {
             console.error("Onboarding error:", err);
@@ -111,6 +162,47 @@ export default function TutorOnboarding() {
             setLoading(false);
         }
     };
+
+    const addWeeklySlot = (dayIndex: number) => {
+        setAvailabilitySlots(prev => [
+            ...prev,
+            {
+                day_of_week: dayIndex,
+                specific_date: null,
+                start_time: "09:00",
+                end_time: "17:00",
+                timezone,
+            },
+        ]);
+    };
+
+    const addOverrideSlot = (date?: string) => {
+        setAvailabilitySlots(prev => [
+            ...prev,
+            {
+                day_of_week: null,
+                specific_date: date ?? new Date().toISOString().split("T")[0],
+                start_time: "09:00",
+                end_time: "17:00",
+                timezone,
+            },
+        ]);
+    };
+
+    const updateSlot = (index: number, updates: Partial<AvailabilitySlot>) => {
+        setAvailabilitySlots(prev => {
+            const next = [...prev];
+            next[index] = { ...next[index], ...updates };
+            return next;
+        });
+    };
+
+    const removeSlot = (index: number) => {
+        setAvailabilitySlots(prev => prev.filter((_, i) => i !== index));
+    };
+
+    const weeklySlots = availabilitySlots.filter(slot => slot.day_of_week !== null);
+    const overrideSlots = availabilitySlots.filter(slot => slot.specific_date);
 
     return (
         <div className="mx-auto max-w-3xl py-12 px-4 sm:px-6 lg:px-8">

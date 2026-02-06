@@ -81,12 +81,28 @@ type Subject = {
   name: string;
   category?: string | null;
   description?: string | null;
+  slug?: string | null;
 };
 
 const subjectFallback: Subject[] = [
-  { name: "English Conversations", category: "Languages", description: "Fluent English with feedback loops." },
-  { name: "SAT & ACT Prep", category: "Test Prep", description: "Adaptive quizzes and tutor reviews." },
-  { name: "Professional English", category: "Professional", description: "Career coaching, interviews, presentations." },
+  {
+    name: "English Conversations",
+    category: "Languages",
+    description: "Fluent English with feedback loops.",
+    slug: "english-conversations",
+  },
+  {
+    name: "SAT & ACT Prep",
+    category: "Test Prep",
+    description: "Adaptive quizzes and tutor reviews.",
+    slug: "sat-act-prep",
+  },
+  {
+    name: "Professional English",
+    category: "Professional",
+    description: "Career coaching, interviews, presentations.",
+    slug: "professional-english",
+  },
 ];
 
 export default async function Home() {
@@ -129,16 +145,22 @@ export default async function Home() {
           </p>
           <div className="flex flex-wrap gap-3">
             <Link
-              href="#subjects"
+              href="/subjects"
               className="rounded-full bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-900 transition hover:brightness-95"
             >
               Explore subjects
             </Link>
             <Link
-              href="#pricing"
+              href="/pricing"
               className="rounded-full border border-white/40 px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:border-sky-400"
             >
               Pricing & plans
+            </Link>
+            <Link
+              href="/tutors"
+              className="rounded-full border border-white/40 px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:border-emerald-300"
+            >
+              Browse tutors
             </Link>
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
@@ -198,13 +220,20 @@ export default async function Home() {
           <h2 className="text-3xl font-semibold text-white">Explore Tracked Disciplines</h2>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
-          {(subjects ?? subjectFallback).map((subject) => (
-            <div key={subject.name} className="rounded-2xl border border-white/10 bg-white/5 p-5 text-left">
-              <p className="text-xs uppercase tracking-[0.3em] text-slate-400">{subject.category ?? "Specialty"}</p>
-              <h3 className="mt-1 text-2xl font-semibold text-white">{subject.name}</h3>
-              <p className="mt-3 text-sm text-slate-300">{subject.description ?? "Expert tutors + AI support."}</p>
-            </div>
-          ))}
+          {(subjects ?? subjectFallback).map((subject) => {
+            const slug = subject.slug ?? subject.name.toLowerCase().replace(/\s+/g, "-");
+            return (
+              <Link
+                key={subject.id ?? subject.name}
+                href={`/subjects/${slug}`}
+                className="group rounded-2xl border border-white/10 bg-white/5 p-5 text-left transition hover:-translate-y-0.5 hover:border-sky-400/50 hover:bg-white/10"
+              >
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">{subject.category ?? "Specialty"}</p>
+                <h3 className="mt-1 text-2xl font-semibold text-white">{subject.name}</h3>
+                <p className="mt-3 text-sm text-slate-300">{subject.description ?? "Expert tutors + AI support."}</p>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -228,12 +257,12 @@ export default async function Home() {
                   <li key={benefit}>• {benefit}</li>
                 ))}
               </ul>
-              <button
-                className="mt-6 w-full rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-4 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-900"
-                type="button"
+              <Link
+                href={`/register?plan=${plan.name.toLowerCase().replace(/\s+/g, "-")}`}
+                className="mt-6 inline-flex w-full justify-center rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-4 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-900 transition hover:brightness-110"
               >
-                Choose {plan.name}
-              </button>
+                {plan.cta}
+              </Link>
             </div>
           ))}
         </div>

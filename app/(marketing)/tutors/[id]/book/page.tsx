@@ -23,6 +23,7 @@ export default function BookTutorPage({
     const [availability, setAvailability] = useState<any[]>([]);
     const [selectedSlot, setSelectedSlot] = useState<Date | null>(null);
     const [bookingLoading, setBookingLoading] = useState(false);
+    const [safePayMessage, setSafePayMessage] = useState<string | null>(null);
 
     useEffect(() => {
         async function loadData() {
@@ -55,9 +56,10 @@ export default function BookTutorPage({
         loadData();
     }, [params.id, supabase]);
 
-    const handleBooking = async () => {
+    const handleBooking = async (paymentMethod: "card" | "safepay") => {
         if (!selectedSlot) return;
         setBookingLoading(true);
+        setSafePayMessage(null);
 
         try {
             const { data: { user } } = await supabase.auth.getUser();
@@ -82,9 +84,37 @@ export default function BookTutorPage({
 
             if (bookingErr) throw bookingErr;
 
-            // 2. Redirect to success or payment simulation
-            alert("Booking request sent! In a real app, we would now redirect to Stripe Checkout.");
-            router.push("/student/my-lessons");
+            const amount = typeof tutor.hourly_rate === "number" ? tutor.hourly_rate : parseFloat(tutor.hourly_rate ?? "0");
+            const response = await fetch("/api/payments/checkout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    bookingId: booking.id,
+                    studentEmail: user.email,
+                    amount,
+                    currency: "USD",
+                    paymentMethod,
+                }),
+            });
+
+            const payload = await response.json();
+
+            if (!response.ok) {
+                throw new Error(payload.error ?? "Payment initiation failed");
+            }
+
+            if (payload.safePay) {
+                setSafePayMessage(payload.instructions);
+                setBookingLoading(false);
+                return;
+            }
+
+            if (payload.url) {
+                window.location.href = payload.url;
+                return;
+            }
+
+            throw new Error("No payment URL returned");
         } catch (err) {
             console.error(err);
             alert("Failed to book lesson.");
@@ -169,24 +199,39 @@ export default function BookTutorPage({
                                     </div>
                                 </div>
 
-                                <Button
-                                    onClick={handleBooking}
-                                    disabled={!selectedSlot || bookingLoading}
-                                    className="w-full bg-gradient-to-r from-sky-500 to-cyan-400 text-slate-950 font-bold h-14 rounded-2xl group"
-                                >
-                                    {bookingLoading ? (
-                                        <Loader2 className="h-5 w-5 animate-spin" />
-                                    ) : (
-                                        <>
-                                            Confirm & Pay
-                                            <CreditCard className="ml-2 h-4 w-4 transition-transform group-hover:scale-110" />
-                                        </>
-                                    )}
-                                </Button>
+                                <div className="space-y-3">
+                                    <Button
+                                        onClick={() => handleBooking("card")}
+                                        disabled={!selectedSlot || bookingLoading}
+                                        className="w-full bg-gradient-to-r from-sky-500 to-cyan-400 text-slate-950 font-bold h-14 rounded-2xl group"
+                                    >
+                                        {bookingLoading ? (
+                                            <Loader2 className="h-5 w-5 animate-spin" />
+                                        ) : (
+                                            <>
+                                                Confirm & Pay
+                                                <CreditCard className="ml-2 h-4 w-4 transition-transform group-hover:scale-110" />
+                                            </>
+                                        )}
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => handleBooking("safepay")}
+                                        disabled={!selectedSlot || bookingLoading}
+                                        className="w-full border-white/20 text-xs uppercase tracking-widest text-white"
+                                    >
+                                        Pay via SafePay (Pakistan)
+                                    </Button>
+                                </div>
 
                                 <p className="text-center text-[10px] text-slate-600 uppercase tracking-widest font-black">
                                     Secure checkout via Stripe
                                 </p>
+                                {safePayMessage && (
+                                    <div className="mt-2 rounded-xl bg-white/5 p-3 text-xs text-slate-200">
+                                        {safePayMessage}
+                                    </div>
+                                )}
                             </div>
                         </Card>
                     </div>

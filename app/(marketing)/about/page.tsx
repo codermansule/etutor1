@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Users, Zap, Shield, Globe } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -133,18 +134,18 @@ export default function AboutPage() {
           live video, and a community that rewards your progress.
         </p>
         <div className="mt-6 flex justify-center gap-3">
-          <a
+          <Link
             href="/register"
             className="rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-8 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-950 transition hover:brightness-110"
           >
             Create free account
-          </a>
-          <a
+          </Link>
+          <Link
             href="/pricing"
             className="rounded-full border border-white/20 px-8 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:bg-white/10"
           >
             View pricing
-          </a>
+          </Link>
         </div>
       </section>
     </main>

@@ -64,13 +64,22 @@ export default function RegisterPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, fullName }),
       }).catch(() => {});
+
+      // Sign in immediately since email confirmation is disabled
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        setError("Account created but couldn't log in. Please login manually.");
+        setLoading(false);
+        return;
+      }
     }
 
     setStatus("Registration successful! Welcome to ETUTOR. Redirecting...");
-    setTimeout(() => {
-      window.location.href = role === "tutor" ? "/tutor" : "/student";
-    }, 1500);
-    setLoading(false);
+    window.location.href = role === "tutor" ? "/tutor" : "/student";
   };
 
   return (
