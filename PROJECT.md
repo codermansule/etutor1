@@ -1189,7 +1189,7 @@ Aggregated learning stats per user per subject.
 | `tutor_profiles` | 0 | Phase 2 onboarding |
 | `tutor_subjects` | 0 | Phase 2 onboarding |
 
-### Phase 2 — PARTIAL (skeleton pages, business logic pending)
+-### Phase 2 — COMPLETE (availability + booking + payments)
 **Marketplace & Booking**
 
 #### Built
@@ -1197,11 +1197,14 @@ Aggregated learning stats per user per subject.
 - Tutor bookings: `/tutor/bookings` (list with accept/reject UI)
 - Student my-lessons: `/student/my-lessons` (booking list with join/review)
 - `TutorCard` component for marketplace listings
+- Availability + onboarding now persist weekly + override slots (`typing/availability slots`, onboarding writes to `availability` table)
+- Booking calendar + booking page now respect availability, create bookings, hit the Stripe/SafePay payment route, and redirect/confirm via webhook + confirmation page.
+- SafePay toggle records instructions (env `SAFEPAY_INSTRUCTIONS`) and keeps bookings `awaiting_payment`.
 
 #### Not Yet Built
 - Tutor onboarding wizard, availability editor, Stripe Checkout, reviews, lesson packages
 
-### Phase 3 — PARTIAL (skeleton only)
+### Phase 3 — NEXT UP (classroom + messaging)
 
 **Video Classroom & Messaging** — Built: LiveKit token API, Classroom page, Messaging page. Not built: LiveKit video, tldraw, recording, real-time messaging.
 
@@ -1220,11 +1223,10 @@ Aggregated learning stats per user per subject.
 ---
 
 ### Next Steps (Priority)
-1. Tutor onboarding wizard
-2. Availability editor (timezone-aware)
-3. Stripe Checkout (booking payment)
-4. Reviews system
-5. Public tutor profiles with ISR + JSON-LD
+1. Classroom & messaging (LiveKit video + tldraw + chat)
+2. Reviews system + post-session reminder notifications
+3. Admin analytics + Stripe payouts
+4. Document SafePay proof/payout verification (if needed)
 6. Wire every marketing/dashboard CTA/button to the real pages we already added (`/about`, `/pricing`, `/subjects`, `/tutors`, role dashboards, etc.) so nothing still points to placeholders or old routes.
 
 ### Link & Navigation Gaps
