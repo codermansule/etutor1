@@ -7,6 +7,7 @@ const navItems = [
   { href: "/pricing", label: "Pricing" },
   { href: "/subjects", label: "Subjects" },
   { href: "/tutors", label: "Tutors" },
+  { href: "/blog", label: "Blog" },
 ];
 
 export default function Header() {

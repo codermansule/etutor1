@@ -36,13 +36,25 @@ const values = [
   },
 ];
 
-const milestones = [
-  { label: "Phase 1", detail: "Foundation — Auth, marketing, profiles, CI/CD" },
-  { label: "Phase 2", detail: "Marketplace — Tutor search, booking, Stripe payments" },
-  { label: "Phase 3", detail: "Classroom — LiveKit video, whiteboard, messaging" },
-  { label: "Phase 4", detail: "AI & Gamification — GPT-4o tutor, XP, badges, leaderboards" },
-  { label: "Phase 5", detail: "Monetization — Subscriptions, courses, notifications, PWA" },
-  { label: "Phase 6", detail: "Polish & Launch — SEO, analytics, accessibility, security audit" },
+const missionCards = [
+  {
+    icon: Users,
+    title: "Accessible Education",
+    description:
+      "We believe every student deserves access to world-class tutoring regardless of location, background, or budget. ETUTOR removes barriers by connecting learners with expert tutors online.",
+  },
+  {
+    icon: Zap,
+    title: "Expert-Led Learning",
+    description:
+      "Our tutors are carefully vetted professionals who bring real-world expertise to every session. Combined with peer reviews and completion tracking, quality is always visible.",
+  },
+  {
+    icon: Globe,
+    title: "Technology That Helps",
+    description:
+      "From AI-generated study plans to interactive whiteboards and gamified progress tracking, our technology amplifies — never replaces — the human connection at the heart of great teaching.",
+  },
 ];
 
 export default function AboutPage() {
@@ -88,27 +100,23 @@ export default function AboutPage() {
       <section className="space-y-6">
         <div className="text-center">
           <p className="text-xs uppercase tracking-[0.4em] text-slate-400">
-            Development roadmap
+            Our Mission
           </p>
           <h2 className="mt-2 text-3xl font-semibold text-white">
-            Built in six iterative phases
+            What drives us every day
           </h2>
         </div>
-        <div className="mx-auto grid max-w-3xl gap-4">
-          {milestones.map((ms, i) => (
+        <div className="grid gap-6 md:grid-cols-3">
+          {missionCards.map((card) => (
             <div
-              key={ms.label}
-              className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/5 p-5"
+              key={card.title}
+              className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-6"
             >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky-500/20 text-xs font-bold text-sky-300">
-                {i + 1}
-              </span>
-              <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">
-                  {ms.label}
-                </p>
-                <p className="mt-1 text-sm text-slate-200">{ms.detail}</p>
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500/10">
+                <card.icon className="h-6 w-6 text-sky-400" />
               </div>
+              <h3 className="text-lg font-semibold text-white">{card.title}</h3>
+              <p className="text-sm text-slate-300">{card.description}</p>
             </div>
           ))}
         </div>

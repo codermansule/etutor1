@@ -125,7 +125,7 @@ export default async function Home() {
 
       <section className="grid gap-10 rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 px-6 py-12 text-white lg:grid-cols-[1.2fr_0.8fr] lg:px-12 lg:py-20">
         <div className="space-y-8">
-          <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Phase 1 · Etutoring marketplace</p>
+          <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Online Tutoring Marketplace</p>
           <h1 className="text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl">
             Learn live with tutors you trust and an AI coach that keeps you motivated.
           </h1>
@@ -180,12 +180,12 @@ export default async function Home() {
           <h2 className="text-3xl font-semibold text-white">Everything a modern tutoring marketplace needs</h2>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
-          {benefits.map((benefit) => (
+          {benefits.map((benefit, i) => (
             <FeatureCard
               key={benefit.title}
               title={benefit.title}
               description={benefit.description}
-              tag="Phase 1"
+              tag={["Live Classrooms", "AI-Powered", "Gamified"][i]}
             />
           ))}
         </div>
@@ -258,24 +258,24 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="space-y-6 px-6 lg:px-12">
-        <div className="flex flex-col gap-2 text-center">
-          <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Phase 1 delivery board</p>
-          <h2 className="text-3xl font-semibold text-white">Delivered with verification in mind</h2>
-          <p className="text-sm text-slate-300">
-            Phase 1 ensures auth, profiles, and marketing pages are live before the marketplace, classroom, and AI modules begin.
-          </p>
-        </div>
-        <div className="grid gap-6 md:grid-cols-3">
-          {[
-            "Phase 1: Foundation, auth, marketing, CI",
-            "Phase 2: Marketplace availability + Stripe",
-            "Phase 3: LiveKit + messaging + AI",
-          ].map((item) => (
-            <div key={item} className="rounded-2xl border border-white/10 bg-white/5 p-5 text-left">
-              <p className="text-sm text-slate-300">{item}</p>
-            </div>
-          ))}
+      <section className="space-y-6 rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950 px-6 py-10 text-center text-white lg:px-12">
+        <h2 className="text-3xl font-semibold">Start your learning journey today</h2>
+        <p className="mx-auto max-w-xl text-sm text-slate-300">
+          Join thousands of students already learning with expert tutors and AI coaching.
+        </p>
+        <div className="flex justify-center gap-3">
+          <Link
+            href="/register"
+            className="rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-8 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-950 transition hover:brightness-110"
+          >
+            Create free account
+          </Link>
+          <Link
+            href="/tutors"
+            className="rounded-full border border-white/20 px-8 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:bg-white/10"
+          >
+            Browse tutors
+          </Link>
         </div>
       </section>
     </main>

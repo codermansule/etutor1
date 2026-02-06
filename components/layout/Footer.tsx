@@ -1,25 +1,69 @@
 import Link from "next/link";
 import Logo from "../shared/Logo";
 
+const platformLinks = [
+  { href: "/subjects", label: "Subjects" },
+  { href: "/tutors", label: "Tutors" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/blog", label: "Blog" },
+];
+
+const companyLinks = [
+  { href: "/about", label: "About" },
+  { href: "/how-it-works", label: "How It Works" },
+  { href: "/contact", label: "Contact" },
+  { href: "/faq", label: "FAQ" },
+];
+
+const legalLinks = [
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms of Service" },
+];
+
 export default function Footer() {
   return (
-    <footer aria-label="Site footer" role="contentinfo" className="border-t border-white/10 bg-slate-950/80 px-4 py-8 text-sm text-slate-400 sm:px-6 lg:px-8">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-col gap-4 items-center md:items-start text-center md:text-left">
+    <footer aria-label="Site footer" role="contentinfo" className="border-t border-white/10 bg-slate-950/80 px-4 py-10 text-sm text-slate-400 sm:px-6 lg:px-8">
+      <div className="mx-auto grid w-full max-w-6xl gap-8 md:grid-cols-4">
+        <div className="space-y-3">
           <Logo width={120} height={35} />
-          <p>© {new Date().getFullYear()} ETUTOR. Empowering learners worldwide.</p>
-          <nav aria-label="Footer navigation" className="flex flex-wrap gap-4 text-xs uppercase tracking-[0.2em]">
-            <Link href="/about" className="transition hover:text-white">About</Link>
-            <Link href="/pricing" className="transition hover:text-white">Pricing</Link>
-            <Link href="/subjects" className="transition hover:text-white">Subjects</Link>
-            <Link href="/tutors" className="transition hover:text-white">Tutors</Link>
-            <Link href="/blog" className="transition hover:text-white">Blog</Link>
-          </nav>
+          <p className="text-sm text-slate-400">
+            Empowering learners worldwide with expert tutors, AI coaching, and gamified progress.
+          </p>
+          <p className="text-xs text-slate-500">&copy; {new Date().getFullYear()} ETUTOR. All rights reserved.</p>
         </div>
-        <p className="max-w-md text-center md:text-right">
-          Designed for elite tutoring: LiveKit classrooms, AI-driven adaptive learning,
-          and gamified educational experiences.
-        </p>
+
+        <div>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">Platform</p>
+          <ul className="space-y-2">
+            {platformLinks.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="transition hover:text-white">{link.label}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">Company</p>
+          <ul className="space-y-2">
+            {companyLinks.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="transition hover:text-white">{link.label}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">Legal</p>
+          <ul className="space-y-2">
+            {legalLinks.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="transition hover:text-white">{link.label}</Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </footer>
   );
