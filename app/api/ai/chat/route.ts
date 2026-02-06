@@ -1,5 +1,5 @@
 import { streamText } from 'ai';
-import { aiModel, SYSTEM_PROMPTS } from '@/lib/ai/openai';
+import { aiModel, SYSTEM_PROMPTS } from '@/lib/ai/provider';
 import { createServerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { findRelevantContent } from '@/lib/ai/vector-search';

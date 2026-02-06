@@ -1,6 +1,6 @@
 import { generateObject } from 'ai';
 import { z } from 'zod';
-import { aiModel } from './openai';
+import { aiModel } from './provider';
 
 export const StudyPlanSchema = z.object({
     title: z.string(),

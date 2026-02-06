@@ -1,5 +1,5 @@
 import { generateObject } from 'ai';
-import { aiModel } from '@/lib/ai/openai';
+import { aiModel } from '@/lib/ai/provider';
 import { z } from 'zod';
 
 const quizSchema = z.object({

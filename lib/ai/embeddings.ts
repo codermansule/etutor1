@@ -1,4 +1,4 @@
-import { googleProvider } from './openai';
+import { googleProvider } from './provider';
 import { embed } from 'ai';
 
 /**
