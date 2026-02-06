@@ -46,22 +46,25 @@ const howItWorks = [
   },
 ];
 
-const pricingPlans = [
+const pricingPlans: { name: string; price: string; benefits: string[]; highlighted?: boolean; cta: string }[] = [
   {
     name: "Free",
     price: "$0",
     benefits: ["Browse tutors", "Book standard lessons", "5 AI messages/day"],
+    cta: "Get started",
   },
   {
     name: "Basic",
     price: "$9.99/mo",
     benefits: ["Unlimited AI chat/quizzes", "Study plans", "Rewards store access"],
+    cta: "Start Basic",
   },
   {
     name: "Premium",
     price: "$24.99/mo",
     benefits: ["Priority booking", "Lesson recordings", "Premium profile themes"],
     highlighted: true,
+    cta: "Go Premium",
   },
 ];
 
