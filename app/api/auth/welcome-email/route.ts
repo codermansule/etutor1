@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { sendEmail, EmailTemplates } from '@/lib/notifications/email-service';
+import { captureError } from '@/lib/monitoring/sentry';
 
 export async function POST(req: Request) {
     try {
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ success: true });
     } catch (error) {
-        console.error('Welcome email error:', error);
+        captureError(error, { route: 'POST /api/auth/welcome-email' });
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

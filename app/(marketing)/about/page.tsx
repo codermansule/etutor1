@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Users, Zap, Shield, Globe } from "lucide-react";
+import { OrganizationJsonLd } from "@/lib/seo/json-ld";
 
 export const metadata: Metadata = {
   title: "About SBETUTOR | Online Tutoring Marketplace",
@@ -47,19 +48,7 @@ const milestones = [
 export default function AboutPage() {
   return (
     <main className="space-y-20 py-12">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "EducationalOrganization",
-            name: "SBETUTOR",
-            url: "https://sb-e-tutor.example.com",
-            description:
-              "Online tutoring marketplace with AI coaching, live video classrooms, and gamified learning.",
-          }),
-        }}
-      />
+      <OrganizationJsonLd />
 
       <section className="text-center">
         <p className="text-xs uppercase tracking-[0.4em] text-slate-400">

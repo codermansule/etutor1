@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AccessToken } from "livekit-server-sdk";
 import { createServiceRoleClient } from "@/lib/supabase/server";
+import { captureError } from "@/lib/monitoring/sentry";
 
 export async function GET(req: NextRequest) {
   const room = req.nextUrl.searchParams.get("room");
@@ -80,7 +81,7 @@ export async function GET(req: NextRequest) {
       sessionId = newSession?.id || "";
     }
   } catch (e) {
-    console.error("Failed to upsert session:", e);
+    captureError(e, { route: "GET /api/livekit/token", context: "session-upsert" });
     // Don't block the token generation if session tracking fails
   }
 

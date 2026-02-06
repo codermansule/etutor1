@@ -4,6 +4,7 @@ import { awardXPWithClient } from "@/lib/gamification/engine";
 import { updateStreakWithClient } from "@/lib/gamification/engine";
 import { checkBadges } from "@/lib/gamification/badges";
 import { updateChallengeProgress } from "@/lib/gamification/challenges";
+import { captureError } from "@/lib/monitoring/sentry";
 
 export async function POST(req: NextRequest) {
   try {
@@ -107,7 +108,7 @@ export async function POST(req: NextRequest) {
       durationSeconds,
     });
   } catch (e) {
-    console.error("End session error:", e);
+    captureError(e, { route: "POST /api/classroom/end" });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

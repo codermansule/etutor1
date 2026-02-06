@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createServiceRoleClient } from "@/lib/supabase/server";
+import { captureError } from "@/lib/monitoring/sentry";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
   try {
     event = stripe.webhooks.constructEvent(payload, signature, webhookSecret!);
   } catch (error) {
-    console.error("Stripe webhook signature verification failed", error);
+    captureError(error, { route: "POST /api/payments/webhook" });
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 

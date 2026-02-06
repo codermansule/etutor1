@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { WebhookReceiver } from "livekit-server-sdk";
 import { createServiceRoleClient } from "@/lib/supabase/server";
+import { captureError } from "@/lib/monitoring/sentry";
 
 const receiver = new WebhookReceiver(
   process.env.LIVEKIT_API_KEY || "",
@@ -71,7 +72,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ received: true });
   } catch (e) {
-    console.error("Webhook error:", e);
+    captureError(e, { route: "POST /api/livekit/webhook" });
     return NextResponse.json(
       { error: "Webhook processing failed" },
       { status: 500 }

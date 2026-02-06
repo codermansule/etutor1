@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
+import { captureError } from '@/lib/monitoring/sentry';
 
 export async function GET(req: NextRequest) {
   try {
@@ -26,7 +27,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Courses GET error:', error);
+    captureError(error, { route: 'GET /api/courses' });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -63,7 +64,7 @@ export async function POST(req: NextRequest) {
     if (error) throw error;
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
-    console.error('Course POST error:', error);
+    captureError(error, { route: 'POST /api/courses' });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createServerClient } from "@/lib/supabase/server";
 import FeatureCard from "@/components/ui/FeatureCard";
 import StatCard from "@/components/ui/StatCard";
+import { OrganizationJsonLd } from "@/lib/seo/json-ld";
 
 const heroStats = [
   { label: "Students taught", value: "5K+", detail: "Across 120+ countries" },
@@ -120,21 +121,7 @@ export default async function Home() {
 
   return (
     <main className="space-y-24 py-12">
-      <script
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            name: "SBETUTOR",
-            url: "https://sb-e-tutor.example.com",
-            logo: "https://sb-e-tutor.example.com/logo.png",
-            sameAs: ["https://www.linkedin.com/company/sbetutor"],
-            contactPoint: [
-              { "@type": "ContactPoint", email: "support@sb-e-TUTOR.com", contactType: "customer support" },
-            ],
-          }),
-        }}
-      />
+      <OrganizationJsonLd />
 
       <section className="grid gap-10 rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 px-6 py-12 text-white lg:grid-cols-[1.2fr_0.8fr] lg:px-12 lg:py-20">
         <div className="space-y-8">

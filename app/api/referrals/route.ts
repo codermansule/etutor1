@@ -3,6 +3,7 @@ import { createServerClient } from '@/lib/supabase/server';
 import { awardXPWithClient } from '@/lib/gamification/engine';
 import { updateStreakWithClient } from '@/lib/gamification/engine';
 import { checkBadges } from '@/lib/gamification/badges';
+import { captureError } from '@/lib/monitoring/sentry';
 
 /**
  * GET /api/referrals — Get current user's referral code and stats
@@ -40,7 +41,7 @@ export async function GET() {
             totalXpEarned: completedCount * 200, // 200 XP per referral
         });
     } catch (error) {
-        console.error('Referral GET error:', error);
+        captureError(error, { route: 'GET /api/referrals' });
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
@@ -125,7 +126,7 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({ success: true });
     } catch (error) {
-        console.error('Referral POST error:', error);
+        captureError(error, { route: 'POST /api/referrals' });
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

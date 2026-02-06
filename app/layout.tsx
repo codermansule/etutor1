@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
+import SkipNav from "@/components/layout/SkipNav";
+import WebVitalsReporter from "@/components/shared/WebVitalsReporter";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -49,7 +51,9 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${inter.variable} bg-slate-950 text-slate-100 antialiased`}
       >
-        {children}
+        <SkipNav />
+        <div id="main-content">{children}</div>
+        <WebVitalsReporter />
       </body>
     </html>
   );

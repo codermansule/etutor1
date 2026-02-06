@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
+import { captureError } from '@/lib/monitoring/sentry';
 
 export async function GET(req: NextRequest) {
   try {
@@ -38,7 +39,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ users: data, total: count, page, limit });
   } catch (error) {
-    console.error('Admin users error:', error);
+    captureError(error, { route: 'GET /api/admin/users' });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

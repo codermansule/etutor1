@@ -1,6 +1,7 @@
 import { createServerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { ingestDocument } from '@/lib/ai/ingestion';
+import { captureError } from '@/lib/monitoring/sentry';
 
 export async function POST(req: Request) {
     try {
@@ -39,7 +40,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json(result);
     } catch (error) {
-        console.error('Ingestion API Error:', error);
+        captureError(error, { route: 'POST /api/admin/ingest' });
         return new NextResponse('Internal Server Error', { status: 500 });
     }
 }

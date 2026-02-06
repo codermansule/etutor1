@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
+import { captureError } from '@/lib/monitoring/sentry';
 
 export async function GET(req: NextRequest) {
   try {
@@ -21,6 +22,7 @@ export async function GET(req: NextRequest) {
     if (error) throw error;
     return NextResponse.json(data);
   } catch (error) {
+    captureError(error, { route: 'GET /api/admin/tutors' });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -58,6 +60,7 @@ export async function PATCH(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    captureError(error, { route: 'PATCH /api/admin/tutors' });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

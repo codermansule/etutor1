@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
+import { captureError } from '@/lib/monitoring/sentry';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -14,7 +15,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     if (error || !data) return NextResponse.json({ error: 'Course not found' }, { status: 404 });
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Course GET error:', error);
+    captureError(error, { route: 'GET /api/courses/[id]' });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -38,7 +39,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     if (error) throw error;
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Course PATCH error:', error);
+    captureError(error, { route: 'PATCH /api/courses/[id]' });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -60,7 +61,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     if (error) throw error;
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Course DELETE error:', error);
+    captureError(error, { route: 'DELETE /api/courses/[id]' });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

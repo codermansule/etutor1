@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Check } from "lucide-react";
+import { FAQPageJsonLd } from "@/lib/seo/json-ld";
 
 export const metadata: Metadata = {
   title: "Pricing & Plans | SBETUTOR",
@@ -82,20 +83,7 @@ const faqs = [
 export default function PricingPage() {
   return (
     <main className="space-y-20 py-12">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqs.map((faq) => ({
-              "@type": "Question",
-              name: faq.q,
-              acceptedAnswer: { "@type": "Answer", text: faq.a },
-            })),
-          }),
-        }}
-      />
+      <FAQPageJsonLd faqs={faqs.map((f) => ({ question: f.q, answer: f.a }))} />
 
       <section className="text-center">
         <p className="text-xs uppercase tracking-[0.4em] text-slate-400">

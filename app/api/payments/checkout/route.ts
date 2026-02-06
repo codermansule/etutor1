@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createServiceRoleClient } from "@/lib/supabase/server";
+import { captureError } from "@/lib/monitoring/sentry";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://localhost:3000";
@@ -86,7 +87,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
-    console.error("Payment route error:", error);
+    captureError(error, { route: "POST /api/payments/checkout" });
     return NextResponse.json({ error: "Failed to create payment session" }, { status: 500 });
   }
 }

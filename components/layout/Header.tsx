@@ -11,10 +11,10 @@ const navItems = [
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-slate-950/80 backdrop-blur">
+    <header aria-label="Site header" className="sticky top-0 z-50 w-full border-b border-white/10 bg-slate-950/80 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-slate-300 sm:px-6 lg:px-8">
         <Logo />
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav aria-label="Main navigation" className="hidden items-center gap-6 md:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}

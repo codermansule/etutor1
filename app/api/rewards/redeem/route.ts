@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
+import { captureError } from '@/lib/monitoring/sentry';
 
 export async function POST(req: Request) {
   try {
@@ -65,7 +66,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, userReward, coinsRemaining: userCoins - reward.coin_cost });
   } catch (error) {
-    console.error('Redeem error:', error);
+    captureError(error, { route: 'POST /api/rewards/redeem' });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

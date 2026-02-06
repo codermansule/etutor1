@@ -1,6 +1,7 @@
 import { createServerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { generateStudyPlan } from '@/lib/ai/study-plan-generator';
+import { captureError } from '@/lib/monitoring/sentry';
 
 export async function POST(req: Request) {
     try {
@@ -47,7 +48,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json(savedPlan);
     } catch (error) {
-        console.error('Study Plan Error:', error);
+        captureError(error, { route: 'POST /api/ai/study-plan' });
         return new NextResponse('Internal Server Error', { status: 500 });
     }
 }

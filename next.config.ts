@@ -9,6 +9,9 @@ const withSerwist = withSerwistInit({
 
 const nextConfig: NextConfig = {
   turbopack: {},
+  images: {
+    formats: ["image/avif", "image/webp"],
+  },
 };
 
 export default withSerwist(nextConfig);

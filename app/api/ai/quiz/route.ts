@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { generateQuiz } from '@/lib/ai/quiz-generator';
+import { captureError } from '@/lib/monitoring/sentry';
 
 export async function POST(req: Request) {
     try {
@@ -57,7 +58,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json(quizRecord);
     } catch (error) {
-        console.error('Quiz API Error:', error);
+        captureError(error, { route: 'POST /api/ai/quiz' });
         return new NextResponse('Internal Server Error', { status: 500 });
     }
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
+import { captureError } from '@/lib/monitoring/sentry';
 
 export async function POST(req: Request) {
   try {
@@ -37,7 +38,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Push subscribe error:', error);
+    captureError(error, { route: 'POST /api/notifications/subscribe' });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -58,6 +59,7 @@ export async function DELETE(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    captureError(error, { route: 'DELETE /api/notifications/subscribe' });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

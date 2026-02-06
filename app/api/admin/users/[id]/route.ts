@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
+import { captureError } from '@/lib/monitoring/sentry';
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -34,6 +35,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     if (error) throw error;
     return NextResponse.json(data);
   } catch (error) {
+    captureError(error, { route: 'PATCH /api/admin/users/[id]' });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

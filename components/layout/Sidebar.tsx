@@ -77,7 +77,7 @@ export default function Sidebar({ role }: { role: "student" | "tutor" | "admin" 
             {role} portal
           </p>
         </div>
-        <nav className="flex-1 space-y-1 p-4">
+        <nav aria-label="Dashboard navigation" className="flex-1 space-y-1 p-4">
           {navItems.map((item) => {
             const isActive =
               pathname === item.href ||
@@ -86,6 +86,7 @@ export default function Sidebar({ role }: { role: "student" | "tutor" | "admin" 
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition",
                   isActive

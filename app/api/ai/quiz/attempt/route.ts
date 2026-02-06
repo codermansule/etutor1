@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
+import { captureError } from '@/lib/monitoring/sentry';
 
 export async function POST(req: Request) {
     try {
@@ -36,7 +37,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ success: true, attemptId: data.id });
     } catch (error) {
-        console.error('Quiz attempt error:', error);
+        captureError(error, { route: 'POST /api/ai/quiz/attempt' });
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

@@ -3,6 +3,7 @@ import { aiModel, SYSTEM_PROMPTS } from '@/lib/ai/openai';
 import { createServerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { findRelevantContent } from '@/lib/ai/vector-search';
+import { captureError } from '@/lib/monitoring/sentry';
 
 export async function POST(req: Request) {
     try {
@@ -67,7 +68,7 @@ export async function POST(req: Request) {
 
         return result.toUIMessageStreamResponse();
     } catch (error) {
-        console.error('AI Chat Error:', error);
+        captureError(error, { route: 'POST /api/ai/chat' });
         return new NextResponse('Internal Server Error', { status: 500 });
     }
 }

@@ -4,6 +4,7 @@ import { awardXPWithClient, type GamificationEvent, XP_VALUES } from '@/lib/gami
 import { updateStreakWithClient } from '@/lib/gamification/engine';
 import { checkBadges } from '@/lib/gamification/badges';
 import { updateChallengeProgress } from '@/lib/gamification/challenges';
+import { captureError } from '@/lib/monitoring/sentry';
 
 export async function POST(req: NextRequest) {
     try {
@@ -41,7 +42,7 @@ export async function POST(req: NextRequest) {
             badges: badgeResult,
         });
     } catch (error) {
-        console.error('Gamification award error:', error);
+        captureError(error, { route: 'POST /api/gamification/award' });
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
