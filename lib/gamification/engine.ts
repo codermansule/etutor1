@@ -11,7 +11,10 @@ export type GamificationEvent =
     | 'challenge_completed'
     | 'badge_earned'
     | 'daily_login'
-    | 'system';
+    | 'system'
+    | 'lesson_delivered'
+    | 'student_review_received'
+    | 'tutor_milestone';
 
 export const XP_VALUES: Record<string, { xp: number, coins: number }> = {
     lesson_completed: { xp: 50, coins: 10 },
@@ -21,6 +24,9 @@ export const XP_VALUES: Record<string, { xp: number, coins: number }> = {
     referral: { xp: 200, coins: 50 },
     daily_login: { xp: 5, coins: 1 },
     badge_earned: { xp: 25, coins: 5 },
+    lesson_delivered: { xp: 30, coins: 5 },
+    student_review_received: { xp: 10, coins: 2 },
+    tutor_milestone: { xp: 100, coins: 20 },
 };
 
 /**

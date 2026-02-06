@@ -13,6 +13,16 @@ export async function POST(req: Request) {
             return new NextResponse('Unauthorized', { status: 401 });
         }
 
+        // Check subscription — study plans require basic+
+        const { checkAIUsage } = await import('@/lib/ai/usage-limits');
+        const usageCheck = await checkAIUsage(user.id, 'study_plan');
+        if (!usageCheck.allowed) {
+            return NextResponse.json(
+                { error: 'Study plans require a Basic or Premium subscription', plan: usageCheck.plan },
+                { status: 403 }
+            );
+        }
+
         // 2. Generate the study plan with AI
         const plan = await generateStudyPlan(subjectName, goal, experienceLevel);
 

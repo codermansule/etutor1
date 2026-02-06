@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { createServerClient } from "@/lib/supabase/server";
 import Sidebar from "@/components/layout/Sidebar";
 import DashboardTopbar from "@/components/layout/DashboardTopbar";
+import PushPrompt from "@/components/features/notifications/PushPrompt";
 
 export default async function DashboardLayout({
   children,
@@ -66,6 +67,7 @@ export default async function DashboardLayout({
         <DashboardTopbar userName={userName} role={role} />
         <main className="flex-1 p-4 lg:p-6">{children}</main>
       </div>
+      <PushPrompt />
     </div>
   );
 }

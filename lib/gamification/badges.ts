@@ -14,6 +14,9 @@ interface UserStats {
     longestStreak: number;
     currentLevel: number;
     quizzesCompleted: number;
+    lessonsDelivered: number;
+    reviewsReceived: number;
+    avgRating: number;
 }
 
 /**
@@ -29,6 +32,10 @@ const BADGE_CRITERIA: BadgeCriteria[] = [
     { badge_id: 'Week on Fire', check: (s) => s.longestStreak >= 7 },
     { badge_id: 'Persistence Pays', check: (s) => s.longestStreak >= 30 },
     { badge_id: 'Zenith', check: (s) => s.currentLevel >= 10 },
+    { badge_id: 'First Lesson Taught', check: (s) => s.lessonsDelivered >= 1 },
+    { badge_id: 'Popular Tutor', check: (s) => s.reviewsReceived >= 10 },
+    { badge_id: 'Star Tutor', check: (s) => s.avgRating >= 4.5 && s.reviewsReceived >= 3 },
+    { badge_id: 'Veteran', check: (s) => s.lessonsDelivered >= 50 },
 ];
 
 /**
@@ -40,7 +47,7 @@ export async function checkBadges(userId: string, client?: SupabaseClient) {
 
     try {
         // Gather user stats in parallel
-        const [lessonsRes, reviewsRes, streakRes, xpRes, quizzesRes] = await Promise.all([
+        const [lessonsRes, reviewsRes, streakRes, xpRes, quizzesRes, sessionsRes, tutorReviewsRes] = await Promise.all([
             supabase
                 .from('bookings')
                 .select('id', { count: 'exact', head: true })
@@ -64,6 +71,15 @@ export async function checkBadges(userId: string, client?: SupabaseClient) {
                 .from('ai_quiz_attempts')
                 .select('id', { count: 'exact', head: true })
                 .eq('user_id', userId),
+            supabase
+                .from('sessions')
+                .select('id', { count: 'exact', head: true })
+                .eq('tutor_id', userId)
+                .eq('status', 'ended'),
+            supabase
+                .from('reviews')
+                .select('rating')
+                .eq('tutor_id', userId),
         ]);
 
         const stats: UserStats = {
@@ -73,6 +89,9 @@ export async function checkBadges(userId: string, client?: SupabaseClient) {
             longestStreak: streakRes.data?.longest_streak ?? 0,
             currentLevel: xpRes.data?.current_level ?? 1,
             quizzesCompleted: quizzesRes.count ?? 0,
+            lessonsDelivered: sessionsRes.count ?? 0,
+            reviewsReceived: tutorReviewsRes.data?.length ?? 0,
+            avgRating: tutorReviewsRes.data?.length ? tutorReviewsRes.data.reduce((sum: number, r: any) => sum + r.rating, 0) / tutorReviewsRes.data.length : 0,
         };
 
         // Fetch all badges and user's already-earned badges

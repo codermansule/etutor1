@@ -73,6 +73,35 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Award XP to tutor for delivering the lesson
+    try {
+      const { data: booking } = await supabase
+        .from("bookings")
+        .select("tutor_id")
+        .eq("student_id", session.student_id)
+        .eq("status", "confirmed")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single();
+
+      if (booking?.tutor_id) {
+        // tutor_profiles.id = user profile id, so tutor_id from bookings references tutor_profiles
+        // Get the tutor's user profile id
+        const { data: tutorProfile } = await supabase
+          .from("tutor_profiles")
+          .select("id")
+          .eq("id", booking.tutor_id)
+          .single();
+
+        if (tutorProfile) {
+          await awardXPWithClient(supabase, tutorProfile.id, 'lesson_delivered', sessionId, 'Delivered a tutoring session');
+          await checkBadges(tutorProfile.id, supabase);
+        }
+      }
+    } catch (tutorXpError) {
+      console.error('Failed to award tutor XP:', tutorXpError);
+    }
+
     return NextResponse.json({
       message: "Session ended",
       durationSeconds,

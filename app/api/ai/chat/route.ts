@@ -15,6 +15,16 @@ export async function POST(req: Request) {
             return new NextResponse('Unauthorized', { status: 401 });
         }
 
+        // Check AI usage limits
+        const { checkAIUsage, incrementAIUsage } = await import('@/lib/ai/usage-limits');
+        const usageCheck = await checkAIUsage(user.id, 'message');
+        if (!usageCheck.allowed) {
+            return NextResponse.json(
+                { error: 'Daily AI message limit reached', remaining: 0, limit: usageCheck.limit, plan: usageCheck.plan },
+                { status: 429 }
+            );
+        }
+
         // Get subject name if subjectId is provided for context
         let subjectContext = '';
         if (subjectId) {
@@ -45,10 +55,13 @@ export async function POST(req: Request) {
             model: aiModel,
             system: systemPrompt,
             messages,
-            onFinish: async (result) => {
-                // Here we could update user_knowledge_state or xp based on the conversation
-                // For now, we just log completion
-                console.log('AI response finished');
+            onFinish: async () => {
+                try {
+                    const { incrementAIUsage } = await import('@/lib/ai/usage-limits');
+                    await incrementAIUsage(user.id, 'message');
+                } catch (e) {
+                    console.error('Failed to increment AI usage:', e);
+                }
             }
         });
 

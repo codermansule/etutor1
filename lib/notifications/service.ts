@@ -47,6 +47,14 @@ export async function sendNotification({
         return null;
     }
 
+    // Best-effort push notification
+    try {
+        const { sendPushNotification } = await import('./web-push');
+        await sendPushNotification(userId, title, message, link);
+    } catch {
+        // Push notification is best-effort
+    }
+
     return data;
 }
 

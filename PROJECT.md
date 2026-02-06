@@ -3,7 +3,7 @@
 **Version:** 1.1
 **Created:** 2026-02-04
 **Last Updated:** 2026-02-07
-**Status:** Phase 1-3 Complete, Phase 4 Complete (Gamification Wired to Real Data)
+**Status:** Phase 1-5 Complete (Rewards, Courses, PWA, Admin V2)
 
 ---
 
@@ -1281,7 +1281,52 @@ Aggregated learning stats per user per subject.
 | `levels` | 10 rows | Levels 1-10 with titles (Newcomer → Legend) |
 | `referrals` | New table | With auto-generated referral codes for all profiles |
 
-### Phases 5-6 — NOT STARTED
+### Phase 5 — COMPLETE (2026-02-07)
+
+Built via 4 parallel agents + 1 shared migration file (`supabase/migrations/20260208_phase5_complete.sql`).
+
+#### A. Rewards Store + AI Tier Limits
+- `app/(dashboard)/student/rewards/page.tsx` + `RewardsPageClient.tsx` — browse & redeem rewards for coins
+- `components/features/gamification/RewardCard.tsx` — reward card with redeem button
+- `app/api/rewards/redeem/route.ts` — POST redeem (coin deduction, stock decrement)
+- `lib/ai/usage-limits.ts` — `checkAIUsage()` / `incrementAIUsage()` per plan tier (Free: 5 msgs/day, 1 quiz/day; Basic/Premium: unlimited)
+- Modified `app/api/ai/chat/route.ts`, `quiz/route.ts`, `study-plan/route.ts` — enforce AI limits + increment usage
+- New tables: `rewards` (8 seed items), `user_rewards`, `subscriptions` (auto-insert trigger), `ai_usage`
+
+#### B. Tutor Gamification + Course Creation
+- Extended `lib/gamification/engine.ts` — 3 new tutor events: `lesson_delivered` (30 XP), `student_review_received` (10 XP), `tutor_milestone` (100 XP)
+- Extended `lib/gamification/badges.ts` — 4 tutor badges: First Lesson Taught, Popular Tutor, Star Tutor, Veteran
+- `app/(dashboard)/tutor/achievements/page.tsx` — tutor achievements page
+- Full course system:
+  - `app/api/courses/route.ts` (GET list + POST create), `[id]/route.ts` (GET/PATCH/DELETE), `[id]/lessons/route.ts`, `[id]/enroll/route.ts`
+  - `app/(dashboard)/tutor/courses/page.tsx`, `new/page.tsx`, `[id]/page.tsx` — tutor course management
+  - `app/(dashboard)/student/courses/page.tsx`, `[slug]/page.tsx`, `CourseEnrollButton.tsx` — student browse + enroll + progress
+- New tables: `courses`, `course_lessons`, `course_enrollments`
+
+#### C. PWA + Push Notifications
+- `app/manifest.ts` — PWA manifest (SBETUTOR, standalone, dark theme)
+- `app/sw.ts` — Serwist service worker with precaching + offline fallback
+- `app/offline/page.tsx` — offline fallback page
+- `next.config.ts` — wrapped with `withSerwist()`, added `turbopack: {}`
+- `lib/notifications/web-push.ts` — `sendPushNotification()` via VAPID
+- `app/api/notifications/subscribe/route.ts` — POST/DELETE push subscriptions
+- `components/features/notifications/PushPrompt.tsx` — permission prompt (auto-shows after 5s)
+- Modified `lib/notifications/service.ts` — best-effort push after in-app notification insert
+- New table: `push_subscriptions`
+- Packages added: `@serwist/next`, `serwist`, `web-push`, `@types/web-push`
+
+#### D. Admin Dashboard V2
+- Rewrote `app/(dashboard)/admin/page.tsx` — real metrics (revenue, bookings, sessions, pending tutors, recent activity)
+- `app/(dashboard)/admin/users/page.tsx` — paginated user list with search/filter/role
+- `app/(dashboard)/admin/users/[id]/page.tsx` — user detail (XP, bookings, payments)
+- `app/(dashboard)/admin/tutors/page.tsx` — tutor approval queue (approve/reject inline)
+- `app/(dashboard)/admin/analytics/page.tsx` — revenue chart (30 days), 8 growth metric cards
+- `app/(dashboard)/admin/moderation/page.tsx` — low-rated review moderation
+- `app/api/admin/users/route.ts`, `[id]/route.ts`, `app/api/admin/tutors/route.ts` — admin API endpoints
+
+| Migration | Tables Added |
+|-----------|-------------|
+| `20260208_phase5_complete.sql` | `rewards`, `user_rewards`, `subscriptions`, `ai_usage`, `courses`, `course_lessons`, `course_enrollments`, `push_subscriptions` + tutor XP events + 8 reward seeds + 5 tutor badges |
 
 ---
 
@@ -1296,18 +1341,11 @@ Aggregated learning stats per user per subject.
 
 ---
 
-### Next Starting Point (Phase 5 & Beyond)
+### Next Starting Point (Phase 6)
 
-#### Immediate Priority — Phase 5: Payments V2, Content & Notifications
-1. **Rewards Store** — Build `/student/rewards` page for spending coins on discounts, free lessons, profile themes. Create `POST /api/rewards/redeem` endpoint. Wire coin deduction into user_xp.
-2. **AI Tier Limits** — Enforce Free/Basic/Premium limits on AI messages (5/day for Free), quiz generation (1/day for Free), and study plans (Basic+ only). Query `subscriptions` table in AI API routes.
-3. **Tutor Gamification** — Extend XP system for tutors: XP for completed sessions, reviews received, student milestones. Tutor leaderboard and badges.
-4. **Course Creation** — Tutor course builder (`/tutor/courses/new`), student enrollment, lesson progress tracking. Tables already exist.
-5. **PWA** — Serwist service worker, manifest.json, offline fallback page, install prompt.
-6. **Push Notifications** — Web Push API integration for reminders, new messages, achievements.
-7. **Admin Dashboard V2** — Revenue analytics, moderation queue, gamification management (create challenges, badges).
+#### Phase 5 — DONE (see above)
 
-#### Lower Priority — Phase 6: Polish & Launch
+#### Immediate Priority — Phase 6: Polish & Launch
 1. SEO finalization (all JSON-LD, sitemap, OG images)
 2. Blog (MDX)
 3. Core Web Vitals optimization
@@ -1357,6 +1395,10 @@ NEXT_PUBLIC_POSTHOG_HOST=
 # Sentry
 NEXT_PUBLIC_SENTRY_DSN=
 SENTRY_AUTH_TOKEN=
+
+# Web Push (VAPID)
+NEXT_PUBLIC_VAPID_PUBLIC_KEY=
+VAPID_PRIVATE_KEY=
 
 # App
 NEXT_PUBLIC_APP_URL=

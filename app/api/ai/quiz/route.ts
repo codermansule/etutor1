@@ -11,6 +11,16 @@ export async function POST(req: Request) {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return new NextResponse('Unauthorized', { status: 401 });
 
+        // Check AI usage limits
+        const { checkAIUsage, incrementAIUsage } = await import('@/lib/ai/usage-limits');
+        const usageCheck = await checkAIUsage(user.id, 'quiz');
+        if (!usageCheck.allowed) {
+            return NextResponse.json(
+                { error: 'Daily AI quiz limit reached', remaining: 0, limit: usageCheck.limit, plan: usageCheck.plan },
+                { status: 429 }
+            );
+        }
+
         // 2. Get subject name
         const { data: subject } = await supabase
             .from('subjects')
@@ -41,6 +51,9 @@ export async function POST(req: Request) {
             console.error('Save error:', saveError);
             throw saveError;
         }
+
+        // Increment usage
+        await incrementAIUsage(user.id, 'quiz');
 
         return NextResponse.json(quizRecord);
     } catch (error) {

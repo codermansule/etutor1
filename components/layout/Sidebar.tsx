@@ -8,6 +8,7 @@ import {
   Calendar,
   BrainCircuit,
   Trophy,
+  Gift,
   MessageSquare,
   Settings,
   BarChart3,
@@ -15,6 +16,7 @@ import {
   BookOpen,
   Clock,
   DollarSign,
+  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -28,8 +30,10 @@ const studentNav: NavItem[] = [
   { href: "/student", label: "Dashboard", icon: Home },
   { href: "/student/find-tutors", label: "Find Tutors", icon: Search },
   { href: "/student/my-lessons", label: "My Lessons", icon: Calendar },
+  { href: "/student/courses", label: "Courses", icon: BookOpen },
   { href: "/student/ai-tutor", label: "AI Tutor", icon: BrainCircuit },
   { href: "/student/achievements", label: "Achievements", icon: Trophy },
+  { href: "/student/rewards", label: "Rewards", icon: Gift },
   { href: "/messages", label: "Messages", icon: MessageSquare },
   { href: "/student/settings", label: "Settings", icon: Settings },
 ];
@@ -40,6 +44,7 @@ const tutorNav: NavItem[] = [
   { href: "/tutor/availability", label: "Availability", icon: Clock },
   { href: "/tutor/students", label: "Students", icon: Users },
   { href: "/tutor/courses", label: "Courses", icon: BookOpen },
+  { href: "/tutor/achievements", label: "Achievements", icon: Trophy },
   { href: "/tutor/earnings", label: "Earnings", icon: DollarSign },
   { href: "/tutor/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/tutor/messages", label: "Messages", icon: MessageSquare },
@@ -53,6 +58,7 @@ const adminNav: NavItem[] = [
   { href: "/admin/subjects", label: "Subjects & Skills", icon: BookOpen },
   { href: "/admin/ingestion", label: "AI Knowledge", icon: BrainCircuit },
   { href: "/admin/analytics", label: "Global Analytics", icon: BarChart3 },
+  { href: "/admin/moderation", label: "Moderation", icon: Shield },
   { href: "/admin/settings", label: "Site Settings", icon: Settings },
 ];
 
