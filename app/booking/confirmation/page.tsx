@@ -90,7 +90,7 @@ export default async function BookingConfirmationPage({
           </div>
           <div className="flex justify-between text-sm text-slate-400">
             <span>Tutor</span>
-            <span className="text-white">{booking.tutors?.full_name ?? "Tutor"}</span>
+            <span className="text-white">{booking.tutor_profiles?.[0]?.full_name ?? "Tutor"}</span>
           </div>
         </div>
         <div className="mt-6 rounded-2xl bg-white/5 p-4 text-sm text-slate-300">
