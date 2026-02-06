@@ -8,7 +8,7 @@ labels: phase1, foundational, done
 ## Status: COMPLETE (2026-02-05)
 
 ## Objective
-Build the scaffolding for SBETUTOR: Next.js 16 App Router with Tailwind CSS 4/shadcn, Supabase auth/schema, marketing microsite, dashboard skeleton, and CI verification.
+Build the scaffolding for ETUTOR: Next.js 16 App Router with Tailwind CSS 4/shadcn, Supabase auth/schema, marketing microsite, dashboard skeleton, and CI verification.
 
 ## Delivered
 - [x] Next.js 16 + TypeScript strict + Tailwind CSS 4 + shadcn/ui (manual components)

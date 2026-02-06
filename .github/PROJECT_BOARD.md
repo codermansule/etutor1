@@ -1,4 +1,4 @@
-# SBETUTOR Parallel Delivery Board
+# ETUTOR Parallel Delivery Board
 
 ## Current Status
 | Phase | Status | Completed |

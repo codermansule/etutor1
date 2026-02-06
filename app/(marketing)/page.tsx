@@ -71,7 +71,7 @@ const pricingPlans: { name: string; price: string; benefits: string[]; highlight
 
 const testimonials = [
   {
-    quote: "SBETUTOR helped me book expert test-prep tutors and the LiveKit rooms feel like a real classroom.",
+    quote: "ETUTOR helped me book expert test-prep tutors and the LiveKit rooms feel like a real classroom.",
     author: "Amelia, SAT student",
   },
   {
@@ -130,7 +130,7 @@ export default async function Home() {
             Learn live with tutors you trust and an AI coach that keeps you motivated.
           </h1>
           <p className="text-lg text-slate-300">
-            SBETUTOR pairs students with vetted tutors, LiveKit classrooms, and adaptive AI study plans
+            ETUTOR pairs students with vetted tutors, LiveKit classrooms, and adaptive AI study plans
             so every lesson, streak, and badge feeds your learning journey.
           </p>
           <div className="flex flex-wrap gap-3">
@@ -162,7 +162,7 @@ export default async function Home() {
         <div className="rounded-3xl border border-white/10 bg-white/5 p-6 text-sm text-slate-200 shadow-[0_25px_60px_rgba(2,6,23,0.8)]">
           <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Platform proof</p>
           <h2 className="mt-2 text-2xl font-semibold text-white">Verified tutors • Responsive AI • Streaks</h2>
-          <p className="mt-4">Hear from students and tutors who rely on SBETUTOR every week.</p>
+          <p className="mt-4">Hear from students and tutors who rely on ETUTOR every week.</p>
           <div className="mt-6 space-y-3">
             {testimonials.map((testimonial) => (
               <blockquote key={testimonial.author} className="rounded-2xl border border-white/10 p-4">
@@ -176,7 +176,7 @@ export default async function Home() {
 
       <section className="space-y-6 px-6 lg:px-12">
         <div className="flex flex-col gap-2">
-          <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Why SBETUTOR</p>
+          <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Why ETUTOR</p>
           <h2 className="text-3xl font-semibold text-white">Everything a modern tutoring marketplace needs</h2>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
@@ -206,7 +206,7 @@ export default async function Home() {
 
       <section id="subjects" className="space-y-6 px-6 lg:px-12">
         <div className="flex flex-col gap-2">
-          <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Subjects on SBETUTOR</p>
+          <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Subjects on ETUTOR</p>
           <h2 className="text-3xl font-semibold text-white">Explore Tracked Disciplines</h2>
         </div>
         <div className="grid gap-6 md:grid-cols-3">

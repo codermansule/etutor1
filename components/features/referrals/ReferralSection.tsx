@@ -34,8 +34,8 @@ export default function ReferralSection({ referralCode }: ReferralSectionProps) 
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: "Join me on SBETUTOR!",
-                    text: `Use my referral code ${referralCode} to get started on SBETUTOR.`,
+                    title: "Join me on ETUTOR!",
+                    text: `Use my referral code ${referralCode} to get started on ETUTOR.`,
                     url,
                 });
             } catch {

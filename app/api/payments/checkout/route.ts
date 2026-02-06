@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency,
             product_data: {
-              name: "SBETUTOR Lesson",
+              name: "ETUTOR Lesson",
               description: `Lesson with tutor ${booking.tutor_id}`,
             },
             unit_amount: Math.round(amount * 100),

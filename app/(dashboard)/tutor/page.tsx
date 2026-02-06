@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Tutor Dashboard | SBETUTOR",
+  title: "Tutor Dashboard | ETUTOR",
 };
 
 const quickActions = [

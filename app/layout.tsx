@@ -20,12 +20,12 @@ export const metadata: Metadata = {
   title: "ETUTOR | Elite Online Tutoring + AI Adaptive Classroom",
   description:
     "Premium tutoring marketplace with expert human tutors, AI-powered study plans, live video classrooms, and gamified learning experiences.",
-  metadataBase: new URL("https://sb-e-tutor.example.com"),
+  metadataBase: new URL("https://etutor.studybitests.com"),
   openGraph: {
     title: "ETUTOR | Elite Online Tutoring + AI Adaptive Classroom",
     description:
       "Premium tutoring marketplace with expert human tutors, AI-powered study plans, live video classrooms, and gamified learning experiences.",
-    url: "https://sb-e-tutor.example.com",
+    url: "https://etutor.studybitests.com",
     siteName: "ETUTOR",
     type: "website",
   },

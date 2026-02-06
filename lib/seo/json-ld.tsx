@@ -8,14 +8,14 @@ export function OrganizationJsonLd() {
   const data = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "SBETUTOR",
-    url: "https://sb-e-tutor.example.com",
-    logo: "https://sb-e-tutor.example.com/logo.png",
-    sameAs: ["https://www.linkedin.com/company/sbetutor"],
+    name: "ETUTOR",
+    url: "https://etutor.studybitests.com",
+    logo: "https://etutor.studybitests.com/logo.png",
+    sameAs: ["https://www.linkedin.com/company/etutor"],
     contactPoint: [
       {
         "@type": "ContactPoint",
-        email: "support@sb-e-tutor.com",
+        email: "support@etutor.studybitests.com",
         contactType: "customer support",
       },
     ],
@@ -77,7 +77,7 @@ interface CourseJsonLdProps {
 export function CourseJsonLd({
   name,
   description,
-  provider = "SBETUTOR",
+  provider = "ETUTOR",
 }: CourseJsonLdProps) {
   const data = {
     "@context": "https://schema.org",
@@ -87,7 +87,7 @@ export function CourseJsonLd({
     provider: {
       "@type": "Organization",
       name: provider,
-      url: "https://sb-e-tutor.example.com",
+      url: "https://etutor.studybitests.com",
     },
   };
 

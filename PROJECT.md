@@ -1,4 +1,4 @@
-# SBETUTOR - Complete Project Specification
+# ETUTOR - Complete Project Specification
 
 **Version:** 1.1
 **Created:** 2026-02-04
@@ -1304,7 +1304,7 @@ Built via 4 parallel agents + 1 shared migration file (`supabase/migrations/2026
 - New tables: `courses`, `course_lessons`, `course_enrollments`
 
 #### C. PWA + Push Notifications
-- `app/manifest.ts` — PWA manifest (SBETUTOR, standalone, dark theme)
+- `app/manifest.ts` — PWA manifest (ETUTOR, standalone, dark theme)
 - `app/sw.ts` — Serwist service worker with precaching + offline fallback
 - `app/offline/page.tsx` — offline fallback page
 - `next.config.ts` — wrapped with `withSerwist()`, added `turbopack: {}`
@@ -1402,5 +1402,5 @@ VAPID_PRIVATE_KEY=
 
 # App
 NEXT_PUBLIC_APP_URL=
-NEXT_PUBLIC_APP_NAME=SBETUTOR
+NEXT_PUBLIC_APP_NAME=ETUTOR
 ```

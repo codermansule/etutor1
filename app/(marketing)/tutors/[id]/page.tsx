@@ -115,7 +115,7 @@ export default async function TutorProfilePage({
                                 <div className="space-y-4">
                                     <div className="border-l-2 border-white/5 pl-4 py-1">
                                         <p className="font-bold text-white text-sm">Verified Degree</p>
-                                        <p className="text-xs text-slate-500">Professional certification checked by SBETUTOR</p>
+                                        <p className="text-xs text-slate-500">Professional certification checked by ETUTOR</p>
                                     </div>
                                 </div>
                             </div>

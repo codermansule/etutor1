@@ -4,9 +4,9 @@ import { createMetadata } from "@/lib/seo/metadata";
 
 export function generateMetadata() {
   return createMetadata({
-    title: "Blog | SBETUTOR",
+    title: "Blog | ETUTOR",
     description:
-      "Tips, guides, and insights on online tutoring, AI-powered learning, and getting the most from SBETUTOR.",
+      "Tips, guides, and insights on online tutoring, AI-powered learning, and getting the most from ETUTOR.",
     path: "/blog",
   });
 }
@@ -24,7 +24,7 @@ export default function BlogIndexPage() {
           Insights &amp; Guides
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-300">
-          Learn how to get the most from SBETUTOR with tips on tutoring, AI
+          Learn how to get the most from ETUTOR with tips on tutoring, AI
           features, and study strategies.
         </p>
       </section>

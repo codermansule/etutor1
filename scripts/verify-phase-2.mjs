@@ -18,7 +18,7 @@ const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE
 });
 
 async function main() {
-    console.log("=== SBETUTOR Phase 2 Database Verification ===\n");
+    console.log("=== ETUTOR Phase 2 Database Verification ===\n");
 
     const tables = [
         "availability",

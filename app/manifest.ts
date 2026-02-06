@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'SBETUTOR - Elite Online Tutoring',
-    short_name: 'SBETUTOR',
+    name: 'ETUTOR - Elite Online Tutoring',
+    short_name: 'ETUTOR',
     description: 'Premium tutoring marketplace with AI-powered learning.',
     start_url: '/student',
     display: 'standalone',

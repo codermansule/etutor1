@@ -3,9 +3,9 @@ import Link from "next/link";
 import { createServerClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "Browse Subjects | SBETUTOR",
+  title: "Browse Subjects | ETUTOR",
   description:
-    "Explore all tutoring subjects on SBETUTOR — languages, academics, test prep, professional skills, arts, and technology.",
+    "Explore all tutoring subjects on ETUTOR — languages, academics, test prep, professional skills, arts, and technology.",
 };
 
 type Subject = {
@@ -63,14 +63,14 @@ export default async function SubjectsPage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "ItemList",
-            name: "SBETUTOR Tutoring Subjects",
+            name: "ETUTOR Tutoring Subjects",
             description:
-              "All subjects available for online tutoring on SBETUTOR.",
+              "All subjects available for online tutoring on ETUTOR.",
             itemListElement: subjects.map((s, i) => ({
               "@type": "ListItem",
               position: i + 1,
               name: s.name,
-              url: `https://sb-e-tutor.example.com/subjects/${s.slug}`,
+              url: `https://etutor.studybitests.com/subjects/${s.slug}`,
             })),
           }),
         }}

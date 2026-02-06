@@ -1,6 +1,6 @@
-# SBETUTOR Phase 1 Foundation
+# ETUTOR Phase 1 Foundation
 
-This repository captures the Phase 1 sprint for SBETUTOR: a Preply-style tutoring marketplace with Supabase auth, marketing pages, and CI verification ready for downstream phases like marketplace booking, LiveKit classrooms, AI tutoring, and gamification.
+This repository captures the Phase 1 sprint for ETUTOR: a Preply-style tutoring marketplace with Supabase auth, marketing pages, and CI verification ready for downstream phases like marketplace booking, LiveKit classrooms, AI tutoring, and gamification.
 
 ## Highlights
 

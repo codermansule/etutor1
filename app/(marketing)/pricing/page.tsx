@@ -4,9 +4,9 @@ import { Check } from "lucide-react";
 import { FAQPageJsonLd } from "@/lib/seo/json-ld";
 
 export const metadata: Metadata = {
-  title: "Pricing & Plans | SBETUTOR",
+  title: "Pricing & Plans | ETUTOR",
   description:
-    "Choose the SBETUTOR plan that fits your learning goals. Free, Basic, and Premium tiers with AI tutoring, gamification, and priority features.",
+    "Choose the ETUTOR plan that fits your learning goals. Free, Basic, and Premium tiers with AI tutoring, gamification, and priority features.",
 };
 
 const plans = [

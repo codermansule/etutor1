@@ -4,9 +4,9 @@ import { Users, Zap, Shield, Globe } from "lucide-react";
 import { OrganizationJsonLd } from "@/lib/seo/json-ld";
 
 export const metadata: Metadata = {
-  title: "About SBETUTOR | Online Tutoring Marketplace",
+  title: "About ETUTOR | Online Tutoring Marketplace",
   description:
-    "SBETUTOR connects students with expert tutors through live video classrooms, AI coaching, and gamified learning — making education accessible worldwide.",
+    "ETUTOR connects students with expert tutors through live video classrooms, AI coaching, and gamified learning — making education accessible worldwide.",
 };
 
 const values = [
@@ -32,7 +32,7 @@ const values = [
     icon: Globe,
     title: "Globally accessible",
     description:
-      "Timezone-aware scheduling, multi-language support, and mobile-responsive design ensure SBETUTOR works for learners anywhere in the world.",
+      "Timezone-aware scheduling, multi-language support, and mobile-responsive design ensure ETUTOR works for learners anywhere in the world.",
   },
 ];
 
@@ -58,7 +58,7 @@ export default function AboutPage() {
           Education that adapts to you
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-300">
-          SBETUTOR is a next-generation tutoring marketplace that pairs students
+          ETUTOR is a next-generation tutoring marketplace that pairs students
           with expert tutors, augments sessions with AI coaching, and keeps
           learners engaged through gamification and progress tracking.
         </p>
@@ -119,7 +119,7 @@ export default function AboutPage() {
           Ready to start learning?
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-sm text-slate-300">
-          Join SBETUTOR today and experience expert tutoring powered by AI,
+          Join ETUTOR today and experience expert tutoring powered by AI,
           live video, and a community that rewards your progress.
         </p>
         <div className="mt-6 flex justify-center gap-3">

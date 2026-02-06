@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import ChatInterface from "@/components/features/chat/ChatInterface";
 
 export const metadata: Metadata = {
-    title: "Messages | SBETUTOR",
+    title: "Messages | ETUTOR",
     description: "Connect with your tutors and students.",
 };
 

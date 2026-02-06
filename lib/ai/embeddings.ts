@@ -1,12 +1,12 @@
-import { openaiProvider } from './openai';
+import { googleProvider } from './openai';
 import { embed } from 'ai';
 
 /**
- * Generates a vector embedding for a given text using OpenAI's embedding model.
+ * Generates a vector embedding for a given text using Google's embedding model.
  */
 export async function generateEmbedding(text: string): Promise<number[]> {
     const { embedding } = await embed({
-        model: openaiProvider.embedding('text-embedding-3-small'),
+        model: googleProvider.textEmbeddingModel('text-embedding-004'),
         value: text.replace(/\n/g, ' '),
     });
     return embedding;

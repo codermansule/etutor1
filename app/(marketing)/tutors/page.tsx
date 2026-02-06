@@ -5,7 +5,7 @@ import { Search, Filter, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const metadata = {
-    title: "Find Expert Tutors | SBETUTOR",
+    title: "Find Expert Tutors | ETUTOR",
     description: "Browse and book lessons with expert tutors across 50+ subjects.",
 };
 

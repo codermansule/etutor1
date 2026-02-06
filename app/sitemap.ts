@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { createServerClient } from "@/lib/supabase/server";
 import { getAllPosts } from "@/lib/blog/utils";
 
-const BASE_URL = "https://sb-e-tutor.example.com";
+const BASE_URL = "https://etutor.studybitests.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [

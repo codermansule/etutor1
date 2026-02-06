@@ -10,9 +10,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "How It Works | SBETUTOR",
+  title: "How It Works | ETUTOR",
   description:
-    "Discover how SBETUTOR works: find a tutor, book a lesson, learn in a LiveKit classroom, earn XP, and level up with AI-powered study plans.",
+    "Discover how ETUTOR works: find a tutor, book a lesson, learn in a LiveKit classroom, earn XP, and level up with AI-powered study plans.",
 };
 
 const steps = [
@@ -77,7 +77,7 @@ export default function HowItWorksPage() {
           From search to mastery in six steps
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-300">
-          SBETUTOR combines expert human tutoring, AI coaching, and gamified
+          ETUTOR combines expert human tutoring, AI coaching, and gamified
           progress tracking into one seamless learning experience.
         </p>
       </section>

@@ -13,10 +13,12 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.22",
     "@ai-sdk/openai": "^3.0.25",
     "@ai-sdk/react": "^3.0.72",
     "@livekit/components-react": "^2.9.19",
     "@livekit/components-styles": "^1.2.0",
+    "@sentry/nextjs": "^8.0.0",
     "@serwist/next": "^9.5.4",
     "@supabase/auth-helpers-nextjs": "^0.15.0",
     "@supabase/supabase-js": "^2.94.1",
@@ -25,28 +27,29 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.31.0",
+    "gray-matter": "^4.0.3",
     "livekit-client": "^2.17.0",
     "livekit-server-sdk": "^2.15.0",
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
+    "next-mdx-remote": "^5.0.0",
     "nodemailer": "^8.0.0",
     "openai": "^6.17.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-markdown": "^10.1.0",
+    "reading-time": "^1.5.0",
     "serwist": "^9.5.4",
     "stripe": "^12.3.0",
     "tailwind-merge": "^3.4.0",
     "tldraw": "^4.3.1",
     "web-push": "^3.6.7",
     "web-vitals": "^4.2.4",
-    "zod": "^4.3.6",
-    "@sentry/nextjs": "^8.0.0",
-    "next-mdx-remote": "^5.0.0",
-    "gray-matter": "^4.0.3",
-    "reading-time": "^1.5.0"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "@playwright/test": "^1.50.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/nodemailer": "^7.0.9",
@@ -57,8 +60,6 @@
     "eslint-config-next": "16.1.6",
     "pg": "^8.18.0",
     "tailwindcss": "^4",
-    "@playwright/test": "^1.50.0",
-    "@axe-core/playwright": "^4.10.0",
     "typescript": "^5"
   }
 }

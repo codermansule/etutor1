@@ -1,16 +1,16 @@
-import { createOpenAI } from '@ai-sdk/openai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
 
-// Create an OpenAI provider instance
-export const openaiProvider = createOpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+// Create a Google Gemini provider instance
+export const googleProvider = createGoogleGenerativeAI({
+    apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
 });
 
 // Default model to use
-export const aiModel = openaiProvider('gpt-4o');
+export const aiModel = googleProvider('gemini-2.0-flash');
 
 // System prompts for different modes
 export const SYSTEM_PROMPTS = {
-    chat: `You are an expert tutor on SBETUTOR. Your goal is to help students learn effectively. 
+    chat: `You are an expert tutor on ETUTOR. Your goal is to help students learn effectively. 
   Follow these guidelines:
   - Be encouraging, patient, and professional.
   - Break down complex concepts into simple, digestible parts.

@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/student/", "/tutor/", "/admin/", "/api/", "/classroom/"],
       },
     ],
-    sitemap: "https://sb-e-tutor.example.com/sitemap.xml",
+    sitemap: "https://etutor.studybitests.com/sitemap.xml",
   };
 }

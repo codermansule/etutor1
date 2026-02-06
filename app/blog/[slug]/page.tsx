@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps) {
   if (!post) return {};
 
   return createMetadata({
-    title: `${post.frontmatter.title} | SBETUTOR Blog`,
+    title: `${post.frontmatter.title} | ETUTOR Blog`,
     description: post.frontmatter.description,
     path: `/blog/${slug}`,
   });
@@ -49,8 +49,8 @@ export default async function BlogPostPage({ params }: PageProps) {
             },
             publisher: {
               "@type": "Organization",
-              name: "SBETUTOR",
-              url: "https://sb-e-tutor.example.com",
+              name: "ETUTOR",
+              url: "https://etutor.studybitests.com",
             },
           }),
         }}

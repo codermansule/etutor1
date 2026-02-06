@@ -1,4 +1,4 @@
--- SBETUTOR Seed Data
+-- ETUTOR Seed Data
 -- Populates subjects table with initial categories and subjects
 
 -- ============================================================

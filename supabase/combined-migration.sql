@@ -1,5 +1,5 @@
 -- ============================================================
--- SBETUTOR Combined Migration + Seed
+-- ETUTOR Combined Migration + Seed
 -- Paste this entire file into Supabase Dashboard > SQL Editor > Run
 -- ============================================================
 

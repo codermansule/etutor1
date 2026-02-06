@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const BASE_URL = "https://sb-e-tutor.example.com";
+const BASE_URL = "https://etutor.studybitests.com";
 
 export function createMetadata({
   title,

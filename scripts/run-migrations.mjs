@@ -1,5 +1,5 @@
 /**
- * Migration runner for SBETUTOR
+ * Migration runner for ETUTOR
  * Connects directly to Supabase PostgreSQL and executes migration + seed files.
  * Usage: node scripts/run-migrations.mjs <db-password>
  */
@@ -86,7 +86,7 @@ async function runMigrations(client) {
 }
 
 async function main() {
-  console.log("=== SBETUTOR Migration Runner ===\n");
+  console.log("=== ETUTOR Migration Runner ===\n");
   console.log("Project ref:", projectRef);
   console.log("Connecting to database...");
 

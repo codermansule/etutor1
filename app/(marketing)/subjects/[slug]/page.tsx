@@ -25,13 +25,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .eq("slug", slug)
     .single();
 
-  if (!subject) return { title: "Subject Not Found | SBETUTOR" };
+  if (!subject) return { title: "Subject Not Found | ETUTOR" };
 
   return {
-    title: `${subject.name} Tutoring | SBETUTOR`,
+    title: `${subject.name} Tutoring | ETUTOR`,
     description:
       subject.description ??
-      `Find expert ${subject.name} tutors on SBETUTOR. Book 1-on-1 lessons, practice with AI, and track your progress.`,
+      `Find expert ${subject.name} tutors on ETUTOR. Book 1-on-1 lessons, practice with AI, and track your progress.`,
   };
 }
 
@@ -80,11 +80,11 @@ export default async function SubjectPage({ params }: Props) {
             name: `${typedSubject.name} Tutoring`,
             description:
               typedSubject.description ??
-              `Expert ${typedSubject.name} tutoring on SBETUTOR.`,
+              `Expert ${typedSubject.name} tutoring on ETUTOR.`,
             provider: {
               "@type": "Organization",
-              name: "SBETUTOR",
-              url: "https://sb-e-tutor.example.com",
+              name: "ETUTOR",
+              url: "https://etutor.studybitests.com",
             },
           }),
         }}

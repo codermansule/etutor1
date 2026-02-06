@@ -18,7 +18,7 @@ const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE
 });
 
 async function main() {
-  console.log("=== SBETUTOR Database Verification ===\n");
+  console.log("=== ETUTOR Database Verification ===\n");
 
   // 1. Check profiles table
   const { data: profiles, error: profErr } = await supabase.from("profiles").select("id").limit(1);
