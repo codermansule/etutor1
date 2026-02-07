@@ -107,7 +107,7 @@ export default async function TutorAnalyticsPage() {
     });
   }
 
-  const sumAmount = (rows: Array<{ tutor_amount?: string | number } | null | undefined>) =>
+  const sumAmount = (rows: { tutor_amount?: string | number }[] | null | undefined) =>
     (rows ?? []).reduce((sum, row) => sum + Number(row?.tutor_amount ?? 0), 0);
 
   const metrics = [
