@@ -1,9 +1,9 @@
 # ETUTOR - Complete Project Specification
 
-**Version:** 1.2
+**Version:** 1.3
 **Created:** 2026-02-04
-**Last Updated:** 2026-02-08
-**Status:** Phase 1-7 Complete — Security hardened, 92 E2E tests passing, mobile-ready, launch prep in progress
+**Last Updated:** 2026-02-09
+**Status:** Phase 1-8 Complete — SEO overhaul, metadata & broken link fixes, 92 E2E tests passing, mobile-ready, launch prep in progress
 
 ---
 
@@ -1425,6 +1425,23 @@ Built via 4 parallel agents + 1 shared migration file (`supabase/migrations/2026
 - All 92 tests passing (1 occasional MDX cold-start flake on retry)
 
 **Phase 7 COMPLETE. Build: 0 errors, 78 routes, 92 E2E tests passing.**
+
+### Phase 8 — SEO Overhaul (2026-02-09)
+
+- **Commit:** 6344905 feat: SEO overhaul — tutor profile metadata, JSON-LD, OG tags, fix broken links
+- **Summary:** Updated tutor profile metadata to include enhanced JSON-LD and OG tags; fixed broken links across marketing pages.
+- **Files Modified:** 11 files changed (320 insertions, 138 deletions):
+  - app/(auth)/layout.tsx
+  - app/(dashboard)/tutor/page.tsx
+  - app/(marketing)/contact/page.tsx
+  - app/(marketing)/how-it-works/page.tsx
+  - app/(marketing)/privacy/page.tsx
+  - app/(marketing)/terms/page.tsx
+  - app/(marketing)/tutors/[id]/book/layout.tsx
+  - app/(marketing)/tutors/[id]/book/page.tsx
+  - app/(marketing)/tutors/[id]/page.tsx
+  - app/(marketing)/tutors/page.tsx
+  - components/layout/Sidebar.tsx
 
 ---
 
