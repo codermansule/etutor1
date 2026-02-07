@@ -75,8 +75,8 @@ export default async function TutorAnalyticsPage() {
         .select("tutor_amount")
         .eq("tutor_id", userId)
         .eq("status", "completed")
-        .gte(prevMonthStart.toISOString())
-        .lt(monthStart.toISOString()),
+        .gte("created_at", prevMonthStart.toISOString())
+        .lt("created_at", monthStart.toISOString()),
       supabase.from("reviews").select("rating").eq("tutor_id", userId),
       supabase
         .from("bookings")
