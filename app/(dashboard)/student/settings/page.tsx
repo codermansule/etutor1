@@ -71,7 +71,7 @@ export default async function StudentSettingsPage() {
                         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Full Name</p>
                         <Input
                             name="fullName"
-                            defaultValue={profile?.full_name ?? user?.full_name ?? ""}
+                            defaultValue={profile?.full_name ?? ""}
                             placeholder="Your full name"
                         />
                     </div>
