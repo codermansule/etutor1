@@ -64,7 +64,7 @@ export default function BookTutorPage() {
         try {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) {
-                router.push(`/login?redirectedFrom=/tutors/${params.id}/book`);
+                router.push(`/login?redirectedFrom=/tutors/${id}/book`);
                 return;
             }
 
