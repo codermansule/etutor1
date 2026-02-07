@@ -1,9 +1,9 @@
 # ETUTOR - Complete Project Specification
 
-**Version:** 1.3
+**Version:** 1.5
 **Created:** 2026-02-04
-**Last Updated:** 2026-02-09
-**Status:** Phase 1-8 Complete — SEO overhaul, metadata & broken link fixes, 92 E2E tests passing, mobile-ready, launch prep in progress
+**Last Updated:** 2026-02-11
+**Status:** Phase 1-10 Complete — SEO overhaul, dashboard settings + analytics, 92 E2E tests passing, mobile-ready, launch prep in progress
 
 ---
 
@@ -1442,6 +1442,30 @@ Built via 4 parallel agents + 1 shared migration file (`supabase/migrations/2026
   - app/(marketing)/tutors/[id]/page.tsx
   - app/(marketing)/tutors/page.tsx
   - components/layout/Sidebar.tsx
+
+### Phase 9 — Dashboard Settings & Profile Management (2026-02-10)
+
+- **Summary:** Added SSR settings surfaces for every dashboard role, enabling profile edits, referral info, pricing, and intro video previews without client-side data loading.
+- **Details:**
+  - Student settings page now offers editable full name, timezone, preferred language, bio, plus the existing referral section and stats, backed by a server action that revalidates the dashboard path.
+  - Tutor settings page (new) loads profile + tutor data server-side, exposes hourly/trial rate inputs, timezone/language, headline/about text, and intro video URL with live preview; updates both `profiles` and `tutor_profiles`.
+  - Admin settings page (new) delivers profile maintenance fields, counts for bookings/students/tutors, pending tutor approvals, and a server action that keeps profile info current.
+
+- **Files Changed:**  
+  - `app/(dashboard)/student/settings/page.tsx`  
+  - `app/(dashboard)/tutor/settings/page.tsx`  
+  - `app/(dashboard)/admin/settings/page.tsx`
+
+- **Summary:** Added a tutor analytics dashboard with weekly/monthly lesson counts, revenue comparisons, rating averages, and an upcoming lessons list; introduced a tutor layout so analytics route coexists with the dashboard root.
+- **Details:**
+  - `app/(dashboard)/tutor/analytics/page.tsx` fetches Supabase stats server-side (bookings, completed lessons, reviews, monthly revenue, pending bookings) and renders them with responsive cards.
+  - Includes upcoming booking list with student names, formatted dates, and status badges plus a quick rating summary panel.
+  - Reuses `createServerClient()` for SSR so analytics remain SEO-friendly and data-driven.
+
+- Added `app/(dashboard)/tutor/layout.tsx` so `/tutor/analytics` can cohabit with `/tutor` without Next layout conflicts.
+
+- **Files Changed:**  
+  - `app/(dashboard)/tutor/analytics/page.tsx`
 
 ---
 
