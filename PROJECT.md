@@ -3,7 +3,7 @@
 **Version:** 1.1
 **Created:** 2026-02-04
 **Last Updated:** 2026-02-07
-**Status:** Phase 1-5 Complete (Rewards, Courses, PWA, Admin V2)
+**Status:** Phase 1-6 Complete — All core features built, 76 E2E tests passing, ready for launch prep
 
 ---
 
@@ -1341,23 +1341,117 @@ Built via 4 parallel agents + 1 shared migration file (`supabase/migrations/2026
 
 ---
 
-### Next Starting Point (Phase 6)
+### Phase 6 — COMPLETE (2026-02-07)
 
-#### Phase 5 — DONE (see above)
+**Polish & Launch — SEO, Testing, Content, Bug Fixes**
 
-#### Immediate Priority — Phase 6: Polish & Launch
-1. SEO finalization (all JSON-LD, sitemap, OG images)
-2. Blog (MDX)
-3. Core Web Vitals optimization
-4. WCAG 2.1 AA accessibility audit
-5. Sentry error tracking + error boundaries
-6. Playwright E2E tests for critical flows
-7. Security audit (CSP, rate limiting, input sanitization)
+#### 6A. Content Polish (commit `c16d764`)
+- Removed all "Phase" references from home page and about page
+- Home: replaced "Phase 1 · Etutoring marketplace" → "Online Tutoring Marketplace"
+- Home: replaced `tag="Phase 1"` on FeatureCards → "Live Classrooms", "AI-Powered", "Gamified"
+- Home: replaced Phase delivery board section with "Start your learning journey" CTA
+- About: replaced dev roadmap/milestones with "Our Mission" section (3 cards: Accessible Education, Expert-Led Learning, Technology That Helps)
+- Header: added "Blog" to nav items
+- Footer: redesigned to 4-column grid (Logo+tagline, Platform, Company, Legal)
 
-### Link & Navigation Gaps
-- Landing hero buttons, pricing CTAs, and marketing cards still point to legacy anchors or the root route; they need to route directly to the fleshed-out marketing (`/subjects`, `/tutors`, `/pricing`) and onboarding flows.
-- Dashboard/tutor action buttons (e.g., "Book a lesson", "View availability", "Switch to tutor view") and marketing nav items need reviewing so they hit the correct App Router pages and don't rely on scaffold placeholders.
-- Updated marketing CTAs: hero buttons now land on `/subjects`, `/pricing`, and `/tutors`; placeholder price cards link to `/register` with the chosen plan; the about page CTAs use Next.js `Link`; header nav also gained a direct `Tutors` entry.
+#### 6B. New Pages (commit `c16d764`)
+- `/privacy` — full privacy policy (data collection, third-party services, rights, contact)
+- `/terms` — terms of service (registration, responsibilities, payment/refund, IP, liability)
+- `/contact` — contact page with 3 info cards + front-end contact form
+- `/faq` — 18 FAQs across 5 sections (General, Tutoring, AI, Payments, Account) with FAQPageJsonLd
+
+#### 6C. Blog Expansion (commit `c16d764`)
+- 4 new blog posts (6 total): tips for online tutoring, gamification in education, choosing the right tutor, AI study plans explained
+- All posts have BlogPosting JSON-LD, tags, reading time
+
+#### 6D. E2E Testing (commit `4dbe4ea`)
+- **76 Playwright tests across 6 spec files, all passing**
+- `marketing.spec.ts` — 21 tests: page loads, content verification, no Phase text, new pages
+- `auth.spec.ts` — 10 tests: forms, cross-links, 5 protected route redirects
+- `blog.spec.ts` — 12 tests: index, 6 individual posts, JSON-LD, 404
+- `navigation.spec.ts` — 7 tests: header links, footer 4-column layout, footer navigation, 404
+- `accessibility.spec.ts` — 14 tests: axe WCAG 2.1 AA on 10 pages, semantic structure, form labels
+- `seo.spec.ts` — 12 tests: meta titles, descriptions, JSON-LD, sitemap, robots, OG tags
+
+#### 6E. Bug Fixes (commit `c5c014e`)
+- Fixed `/student/find-tutors` 404 → changed sidebar & dashboard links to `/tutors`
+- Generated proper PWA icons (192x192 and 512x512) replacing 1x1 pixel placeholders
+- Created `/api/analytics/vitals` POST endpoint for WebVitalsReporter
+- Added profile photo upload to registration form (preview, 2MB limit, Supabase Storage)
+
+---
+
+### Session End Notes (2026-02-07)
+
+**All 6 development phases are COMPLETE. Build: 0 errors, 71 routes, 76 E2E tests passing.**
+
+---
+
+## 🚀 CONTINUE FROM HERE (2026-02-08)
+
+### Immediate — Must Do Before Launch
+
+#### 1. Supabase Storage Setup
+- [ ] Create `avatars` bucket in Supabase Dashboard (Storage > New Bucket > public)
+- [ ] Verify avatar upload works on registration
+
+#### 2. Approve Test Tutors
+- [ ] Register 2-3 tutor accounts with full profiles
+- [ ] Approve them via `/admin/tutors` so `/tutors` page shows results
+- [ ] Verify booking flow end-to-end with an approved tutor
+
+#### 3. Lighthouse & Core Web Vitals
+- [ ] Run Lighthouse audit on key pages (home, tutors, pricing, blog)
+- [ ] Target: 90+ on Performance, Accessibility, SEO, Best Practices
+- [ ] Optimize images (next/image, lazy loading, proper sizes)
+- [ ] Check bundle size — identify and lazy-load heavy client components
+
+#### 4. Security Hardening
+- [ ] Add CSP headers (Content-Security-Policy in `next.config.ts` or middleware)
+- [ ] Add rate limiting on sensitive API routes (`/api/ai/*`, `/api/auth/*`, `/api/payments/*`)
+- [ ] Review all API routes for input validation (Zod schemas on POST bodies)
+- [ ] Verify Stripe webhook signature validation is working
+- [ ] Check CORS policies
+
+#### 5. Mobile Responsiveness QA
+- [ ] Test all new pages at 375px (privacy, terms, contact, FAQ, blog posts)
+- [ ] Test mobile nav (hamburger menu) includes Blog link
+- [ ] Test registration flow on mobile with avatar upload
+- [ ] Test student/tutor dashboards on mobile
+
+### Nice to Have — Post-Launch Polish
+
+#### 6. Dynamic OG Images
+- [ ] Create `opengraph-image.tsx` for blog posts (dynamic per-post images)
+- [ ] Create OG images for tutor profiles and subject pages
+
+#### 7. Enhanced Vitals Endpoint
+- [ ] Wire `/api/analytics/vitals` to PostHog or a DB table instead of console.log
+- [ ] Add dashboard widget for Core Web Vitals monitoring
+
+#### 8. Contact Form Backend
+- [ ] Wire contact form to actually send email via Brevo SMTP
+- [ ] Add success/error states to the form UI
+
+#### 9. Additional Testing
+- [ ] Add authenticated E2E tests (login → book tutor → classroom → review)
+- [ ] Load testing on critical API routes
+- [ ] Cross-browser testing (Firefox, Safari)
+
+#### 10. Production Deployment Checklist
+- [ ] Set all environment variables on Vercel
+- [ ] Verify Supabase RLS policies in production
+- [ ] Configure custom domain (etutor.studybitests.com)
+- [ ] Set up Sentry error alerting
+- [ ] Enable PostHog analytics
+- [ ] Test Stripe webhooks with production keys
+- [ ] Verify PWA install works on Android/iOS
+
+### Known Issues
+- Tutors page shows empty when no tutors are approved (needs seed data or admin action)
+- Contact form is front-end only (no email sending yet)
+- Web Vitals endpoint logs to console only (not persisted)
+- Phase 2/3 have partial implementations noted in their sections above (onboarding wizard, LiveKit video, tldraw)
 
 ## Environment Variables Required
 
