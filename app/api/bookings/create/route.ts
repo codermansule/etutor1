@@ -4,7 +4,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import { bookingCreateSchema, parseBody } from "@/lib/validations/api-schemas";
 
 export async function POST(req: NextRequest) {
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
   const {
     data: { user },
     error: userErr,
