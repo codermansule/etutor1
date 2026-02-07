@@ -4,6 +4,14 @@ export const metadata: Metadata = {
   title: "Terms of Service | ETUTOR",
   description:
     "Read the ETUTOR terms of service covering account usage, payments, refunds, and platform policies.",
+  openGraph: {
+    title: "Terms of Service | ETUTOR",
+    description: "Read the ETUTOR terms of service covering account usage, payments, refunds, and platform policies.",
+    url: "https://etutor.studybitests.com/terms",
+    siteName: "ETUTOR",
+    type: "website",
+  },
+  alternates: { canonical: "https://etutor.studybitests.com/terms" },
 };
 
 export default function TermsPage() {

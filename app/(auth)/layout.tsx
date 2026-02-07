@@ -2,8 +2,14 @@ import Link from "next/link";
 import Logo from "@/components/shared/Logo";
 
 export const metadata = {
-  title: "ETUTOR Auth",
+  title: "Sign In | ETUTOR",
   description: "Securely register or log in to ETUTOR, the elite adaptive tutoring platform.",
+  openGraph: {
+    title: "Sign In | ETUTOR",
+    description: "Securely register or log in to ETUTOR, the elite adaptive tutoring platform.",
+    siteName: "ETUTOR",
+  },
+  robots: { index: false },
 };
 
 export default function AuthLayout({

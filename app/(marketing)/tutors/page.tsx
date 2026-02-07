@@ -6,7 +6,15 @@ import { Button } from "@/components/ui/button";
 
 export const metadata = {
     title: "Find Expert Tutors | ETUTOR",
-    description: "Browse and book lessons with expert tutors across 50+ subjects.",
+    description: "Browse and book lessons with expert tutors across 50+ subjects. Filter by subject, price, rating, and availability.",
+    openGraph: {
+        title: "Find Expert Tutors | ETUTOR",
+        description: "Browse and book lessons with expert tutors across 50+ subjects.",
+        url: "https://etutor.studybitests.com/tutors",
+        siteName: "ETUTOR",
+        type: "website",
+    },
+    alternates: { canonical: "https://etutor.studybitests.com/tutors" },
 };
 
 export default async function TutorsPage({

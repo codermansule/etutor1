@@ -6,6 +6,14 @@ export const metadata: Metadata = {
   title: "Contact Us | ETUTOR",
   description:
     "Get in touch with the ETUTOR team for general inquiries, technical support, or tutor applications.",
+  openGraph: {
+    title: "Contact Us | ETUTOR",
+    description: "Get in touch with the ETUTOR team for support, inquiries, or tutor applications.",
+    url: "https://etutor.studybitests.com/contact",
+    siteName: "ETUTOR",
+    type: "website",
+  },
+  alternates: { canonical: "https://etutor.studybitests.com/contact" },
 };
 
 const contactCards = [

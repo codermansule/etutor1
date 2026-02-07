@@ -13,6 +13,14 @@ export const metadata: Metadata = {
   title: "How It Works | ETUTOR",
   description:
     "Discover how ETUTOR works: find a tutor, book a lesson, learn in a LiveKit classroom, earn XP, and level up with AI-powered study plans.",
+  openGraph: {
+    title: "How It Works | ETUTOR",
+    description: "From search to mastery in six steps. Find a tutor, book a lesson, and level up with AI study plans.",
+    url: "https://etutor.studybitests.com/how-it-works",
+    siteName: "ETUTOR",
+    type: "website",
+  },
+  alternates: { canonical: "https://etutor.studybitests.com/how-it-works" },
 };
 
 const steps = [
@@ -67,7 +75,22 @@ const steps = [
 ];
 
 export default function HowItWorksPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "How ETUTOR Works",
+    description: "From search to mastery in six steps — find a tutor, book a lesson, learn in a live classroom, and level up with AI-powered study plans.",
+    step: steps.map((step, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: step.title,
+      text: step.description,
+    })),
+  };
+
   return (
+    <>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
     <main className="space-y-20 py-12">
       <section className="text-center">
         <p className="text-xs uppercase tracking-[0.4em] text-slate-400">
@@ -133,5 +156,6 @@ export default function HowItWorksPage() {
         </div>
       </section>
     </main>
+    </>
   );
 }

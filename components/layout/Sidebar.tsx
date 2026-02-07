@@ -42,7 +42,6 @@ const tutorNav: NavItem[] = [
   { href: "/tutor", label: "Dashboard", icon: Home },
   { href: "/tutor/bookings", label: "Bookings", icon: Calendar },
   { href: "/tutor/availability", label: "Availability", icon: Clock },
-  { href: "/tutor/students", label: "Students", icon: Users },
   { href: "/tutor/courses", label: "Courses", icon: BookOpen },
   { href: "/tutor/achievements", label: "Achievements", icon: Trophy },
   { href: "/tutor/earnings", label: "Earnings", icon: DollarSign },

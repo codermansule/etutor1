@@ -32,7 +32,7 @@ export default function BookTutorPage({
                 .from("tutor_profiles")
                 .select(`
           *,
-          profiles:id (
+          profiles (
             full_name,
             avatar_url,
             timezone

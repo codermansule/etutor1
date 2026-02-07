@@ -4,6 +4,14 @@ export const metadata: Metadata = {
   title: "Privacy Policy | ETUTOR",
   description:
     "Learn how ETUTOR collects, uses, and protects your personal information.",
+  openGraph: {
+    title: "Privacy Policy | ETUTOR",
+    description: "Learn how ETUTOR collects, uses, and protects your personal information.",
+    url: "https://etutor.studybitests.com/privacy",
+    siteName: "ETUTOR",
+    type: "website",
+  },
+  alternates: { canonical: "https://etutor.studybitests.com/privacy" },
 };
 
 export default function PrivacyPage() {

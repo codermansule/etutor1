@@ -28,10 +28,10 @@ const quickActions = [
     description: "Set your weekly schedule",
   },
   {
-    href: "/tutor/students",
+    href: "/tutor/bookings",
     icon: Users,
-    label: "Students",
-    description: "See your student roster",
+    label: "My Students",
+    description: "See bookings and student history",
   },
   {
     href: "/tutor/courses",
