@@ -96,11 +96,13 @@ export default function BookTutorPage() {
                 throw new Error(bookingPayload.error ?? "Failed to create booking.");
             }
 
+            const bookingId = bookingPayload.bookingId;
+
             const response = await fetch("/api/payments/checkout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    bookingId: booking.id,
+                    bookingId,
                     studentEmail: user.email,
                     amount,
                     currency: "USD",
