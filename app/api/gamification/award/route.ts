@@ -5,6 +5,7 @@ import { updateStreakWithClient } from '@/lib/gamification/engine';
 import { checkBadges } from '@/lib/gamification/badges';
 import { updateChallengeProgress } from '@/lib/gamification/challenges';
 import { captureError } from '@/lib/monitoring/sentry';
+import { gamificationAwardSchema, parseBody } from '@/lib/validations/api-schemas';
 
 export async function POST(req: NextRequest) {
     try {
@@ -15,9 +16,11 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { event, referenceId, description } = await req.json();
+        const parsed = parseBody(gamificationAwardSchema, await req.json());
+        if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+        const { event, referenceId, description } = parsed.data;
 
-        if (!event || !XP_VALUES[event]) {
+        if (!XP_VALUES[event]) {
             return NextResponse.json({ error: 'Invalid event type' }, { status: 400 });
         }
 

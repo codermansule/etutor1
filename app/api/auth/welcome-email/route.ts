@@ -1,14 +1,13 @@
 import { NextResponse } from 'next/server';
 import { sendEmail, EmailTemplates } from '@/lib/notifications/email-service';
 import { captureError } from '@/lib/monitoring/sentry';
+import { welcomeEmailSchema, parseBody } from '@/lib/validations/api-schemas';
 
 export async function POST(req: Request) {
     try {
-        const { email, fullName } = await req.json();
-
-        if (!email || !fullName) {
-            return NextResponse.json({ error: 'Missing email or name' }, { status: 400 });
-        }
+        const parsed = parseBody(welcomeEmailSchema, await req.json());
+        if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+        const { email, fullName } = parsed.data;
 
         const template = EmailTemplates.welcome(fullName);
         const result = await sendEmail({

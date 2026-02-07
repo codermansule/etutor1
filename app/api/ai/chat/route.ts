@@ -4,10 +4,13 @@ import { createServerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { findRelevantContent } from '@/lib/ai/vector-search';
 import { captureError } from '@/lib/monitoring/sentry';
+import { chatSchema, parseBody } from '@/lib/validations/api-schemas';
 
 export async function POST(req: Request) {
     try {
-        const { messages, subjectId, mode = 'chat' } = await req.json();
+        const parsed = parseBody(chatSchema, await req.json());
+        if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+        const { messages, subjectId, mode } = parsed.data;
         const supabase = await createServerClient();
 
         // Check authentication

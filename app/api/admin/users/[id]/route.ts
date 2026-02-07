@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { captureError } from '@/lib/monitoring/sentry';
+import { adminUserUpdateSchema, parseBody } from '@/lib/validations/api-schemas';
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -14,12 +15,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const body = await req.json();
-    const allowedFields = ['role', 'full_name'];
-    const updates: Record<string, any> = {};
-    for (const field of allowedFields) {
-      if (body[field] !== undefined) updates[field] = body[field];
-    }
+    const parsed = parseBody(adminUserUpdateSchema, await req.json());
+    if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+    const updates = parsed.data;
 
     if (Object.keys(updates).length === 0) {
       return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });

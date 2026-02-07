@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { captureError } from '@/lib/monitoring/sentry';
+import { quizAttemptSchema, parseBody } from '@/lib/validations/api-schemas';
 
 export async function POST(req: Request) {
     try {
@@ -11,11 +12,9 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { quizId, answers, score, correctCount, totalCount } = await req.json();
-
-        if (!quizId || score == null || correctCount == null || totalCount == null) {
-            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-        }
+        const parsed = parseBody(quizAttemptSchema, await req.json());
+        if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+        const { quizId, answers, score, correctCount, totalCount } = parsed.data;
 
         const { data, error } = await supabase
             .from('ai_quiz_attempts')

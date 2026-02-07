@@ -2,10 +2,13 @@ import { createServerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { ingestDocument } from '@/lib/ai/ingestion';
 import { captureError } from '@/lib/monitoring/sentry';
+import { ingestDocumentSchema, parseBody } from '@/lib/validations/api-schemas';
 
 export async function POST(req: Request) {
     try {
-        const { title, content, subjectId, metadata, sourceUrl } = await req.json();
+        const parsed = parseBody(ingestDocumentSchema, await req.json());
+        if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+        const { title, content, subjectId, metadata, sourceUrl } = parsed.data;
         const supabase = await createServerClient();
 
         // 1. Verify admin/tutor role

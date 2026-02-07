@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
+import { vitalsSchema, parseBody } from "@/lib/validations/api-schemas";
 
 export async function POST(request: Request) {
   try {
-    const metric = await request.json();
+    const parsed = parseBody(vitalsSchema, await request.json());
+    if (!parsed.success) return NextResponse.json({ ok: false }, { status: 400 });
+    const metric = parsed.data;
 
     // Log to server console in production for now.
     // Replace with PostHog, Sentry, or a DB insert when ready.

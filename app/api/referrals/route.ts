@@ -4,6 +4,7 @@ import { awardXPWithClient } from '@/lib/gamification/engine';
 import { updateStreakWithClient } from '@/lib/gamification/engine';
 import { checkBadges } from '@/lib/gamification/badges';
 import { captureError } from '@/lib/monitoring/sentry';
+import { referralSchema, parseBody } from '@/lib/validations/api-schemas';
 
 /**
  * GET /api/referrals — Get current user's referral code and stats
@@ -59,11 +60,9 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { referralCode } = await req.json();
-
-        if (!referralCode) {
-            return NextResponse.json({ error: 'Missing referral code' }, { status: 400 });
-        }
+        const parsed = parseBody(referralSchema, await req.json());
+        if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+        const { referralCode } = parsed.data;
 
         // Find the referrer by code
         const { data: referrer } = await supabase

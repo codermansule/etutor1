@@ -5,17 +5,13 @@ import { updateStreakWithClient } from "@/lib/gamification/engine";
 import { checkBadges } from "@/lib/gamification/badges";
 import { updateChallengeProgress } from "@/lib/gamification/challenges";
 import { captureError } from "@/lib/monitoring/sentry";
+import { classroomEndSchema, parseBody } from "@/lib/validations/api-schemas";
 
 export async function POST(req: NextRequest) {
   try {
-    const { sessionId } = await req.json();
-
-    if (!sessionId) {
-      return NextResponse.json(
-        { error: "Missing sessionId" },
-        { status: 400 }
-      );
-    }
+    const parsed = parseBody(classroomEndSchema, await req.json());
+    if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+    const { sessionId } = parsed.data;
 
     const supabase = createServiceRoleClient();
 

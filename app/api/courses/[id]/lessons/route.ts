@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { captureError } from '@/lib/monitoring/sentry';
+import { lessonCreateSchema, parseBody } from '@/lib/validations/api-schemas';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -37,18 +38,20 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
     if (!course) return NextResponse.json({ error: 'Course not found' }, { status: 404 });
 
-    const body = await req.json();
+    const parsed = parseBody(lessonCreateSchema, await req.json());
+    if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+    const body = parsed.data;
     const { data, error } = await supabase
       .from('course_lessons')
       .insert({
         course_id: id,
         title: body.title,
-        description: body.description || '',
-        content: body.content || '',
-        video_url: body.video_url || null,
-        sort_order: body.sort_order || 0,
-        duration_minutes: body.duration_minutes || null,
-        is_free_preview: body.is_free_preview || false,
+        description: body.description,
+        content: body.content,
+        video_url: body.video_url,
+        sort_order: body.sort_order,
+        duration_minutes: body.duration_minutes,
+        is_free_preview: body.is_free_preview,
       })
       .select()
       .single();

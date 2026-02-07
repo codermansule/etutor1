@@ -8,8 +8,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import ReactMarkdown from 'react-markdown';
-import QuizInterface from './QuizInterface';
+import dynamic from 'next/dynamic';
+
+const ReactMarkdown = dynamic(() => import('react-markdown'), { ssr: false });
+const QuizInterface = dynamic(() => import('./QuizInterface'), {
+    ssr: false,
+    loading: () => (
+        <div className="flex items-center justify-center h-64">
+            <p className="text-slate-400 text-sm animate-pulse">Loading quiz...</p>
+        </div>
+    ),
+});
 
 interface AIChatProps {
     subjectId?: string;

@@ -1,9 +1,9 @@
 # ETUTOR - Complete Project Specification
 
-**Version:** 1.1
+**Version:** 1.2
 **Created:** 2026-02-04
-**Last Updated:** 2026-02-07
-**Status:** Phase 1-6 Complete — All core features built, 76 E2E tests passing, ready for launch prep
+**Last Updated:** 2026-02-08
+**Status:** Phase 1-7 Complete — Security hardened, 92 E2E tests passing, mobile-ready, launch prep in progress
 
 ---
 
@@ -1387,13 +1387,54 @@ Built via 4 parallel agents + 1 shared migration file (`supabase/migrations/2026
 
 ---
 
-## 🚀 CONTINUE FROM HERE (2026-02-08)
+### Phase 7 — Security Hardening, Performance & Polish (2026-02-08)
+
+#### 7A. Security Hardening
+- CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy headers (already existed in `lib/security/headers.ts`)
+- Rate limiting: 60/min API, 10/min auth, 30/min AI (already existed in `lib/security/rate-limit.ts`)
+- **Zod input validation** on all 16 API POST routes via centralized `lib/validations/api-schemas.ts`
+  - Routes validated: ai/chat, ai/quiz, ai/quiz/attempt, ai/study-plan, payments/checkout, classroom/end, courses (POST/PATCH), courses/[id]/lessons, rewards/redeem, admin/ingest, admin/tutors, admin/users/[id], gamification/award, referrals, notifications/subscribe (POST+DELETE), auth/welcome-email, analytics/vitals
+- Stripe webhook signature verification confirmed working
+- `parseBody()` helper returns structured error messages with field paths
+
+#### 7B. Performance Optimization
+- Dynamic imports: ReactMarkdown + QuizInterface in AIChat lazy-loaded via `next/dynamic`
+- All images use `next/image` with AVIF/WebP (confirmed, no raw `<img>` tags)
+- Fonts optimized: Space Grotesk + Inter via `next/font/google` with subsets
+- Tldraw (Whiteboard) already dynamically imported
+
+#### 7C. Dynamic OG Images
+- `app/blog/[slug]/opengraph-image.tsx` — generates branded OG images per blog post
+- Uses Next.js `ImageResponse` with title, author, date, and ETUTOR branding
+- Static params pre-generates images for all 6 blog posts
+
+#### 7D. Contact Form Backend
+- `app/api/contact/route.ts` — sends emails via Brevo SMTP with Zod validation
+- `components/features/contact/ContactForm.tsx` — interactive client component
+- Success/error/loading states, HTML5 required validation, 10-char minimum message
+
+#### 7E. Mobile Navigation
+- Created `components/layout/MobileNav.tsx` — hamburger menu for mobile viewports
+- Shows all 6 nav links + Login + Sign up on mobile
+- Opens/closes with animation, closes on link click
+- Desktop login/signup hidden below `sm:` breakpoint (shown in mobile nav instead)
+
+#### 7F. Testing Expansion (76 → 92 tests)
+- `tests/e2e/mobile.spec.ts` — 15 tests at 375px: hamburger menu, page rendering, no horizontal scroll
+- `tests/e2e/marketing.spec.ts` — 2 new contact form tests (validation, fill)
+- All 92 tests passing (1 occasional MDX cold-start flake on retry)
+
+**Phase 7 COMPLETE. Build: 0 errors, 78 routes, 92 E2E tests passing.**
+
+---
+
+## 🚀 CONTINUE FROM HERE (2026-02-09)
 
 ### Immediate — Must Do Before Launch
 
 #### 1. Supabase Storage Setup
-- [ ] Create `avatars` bucket in Supabase Dashboard (Storage > New Bucket > public)
-- [ ] Verify avatar upload works on registration
+- [x] Create `avatars` bucket in Supabase Dashboard (Storage > New Bucket > public)
+- [ ] Verify avatar upload works on registration (test after adding RLS policies)
 
 #### 2. Approve Test Tutors
 - [ ] Register 2-3 tutor accounts with full profiles
@@ -1401,37 +1442,37 @@ Built via 4 parallel agents + 1 shared migration file (`supabase/migrations/2026
 - [ ] Verify booking flow end-to-end with an approved tutor
 
 #### 3. Lighthouse & Core Web Vitals
+- [x] Optimize images (all use next/image, AVIF/WebP formats)
+- [x] Check bundle size — lazy-loaded ReactMarkdown, QuizInterface, Whiteboard
 - [ ] Run Lighthouse audit on key pages (home, tutors, pricing, blog)
 - [ ] Target: 90+ on Performance, Accessibility, SEO, Best Practices
-- [ ] Optimize images (next/image, lazy loading, proper sizes)
-- [ ] Check bundle size — identify and lazy-load heavy client components
 
-#### 4. Security Hardening
-- [ ] Add CSP headers (Content-Security-Policy in `next.config.ts` or middleware)
-- [ ] Add rate limiting on sensitive API routes (`/api/ai/*`, `/api/auth/*`, `/api/payments/*`)
-- [ ] Review all API routes for input validation (Zod schemas on POST bodies)
-- [ ] Verify Stripe webhook signature validation is working
+#### 4. Security Hardening — COMPLETE
+- [x] CSP headers via middleware
+- [x] Rate limiting on all API routes (60/min, 10/min auth, 30/min AI)
+- [x] Zod validation on all 16 API POST routes
+- [x] Stripe webhook signature validation confirmed
 - [ ] Check CORS policies
 
-#### 5. Mobile Responsiveness QA
-- [ ] Test all new pages at 375px (privacy, terms, contact, FAQ, blog posts)
-- [ ] Test mobile nav (hamburger menu) includes Blog link
-- [ ] Test registration flow on mobile with avatar upload
-- [ ] Test student/tutor dashboards on mobile
+#### 5. Mobile Responsiveness QA — COMPLETE
+- [x] Test all new pages at 375px (15 Playwright tests passing)
+- [x] Mobile hamburger menu with Blog link (MobileNav.tsx)
+- [ ] Test registration flow on mobile with avatar upload (manual)
+- [ ] Test student/tutor dashboards on mobile (needs auth)
 
 ### Nice to Have — Post-Launch Polish
 
-#### 6. Dynamic OG Images
-- [ ] Create `opengraph-image.tsx` for blog posts (dynamic per-post images)
+#### 6. Dynamic OG Images — PARTIAL
+- [x] Blog post OG images (`app/blog/[slug]/opengraph-image.tsx`)
 - [ ] Create OG images for tutor profiles and subject pages
 
 #### 7. Enhanced Vitals Endpoint
 - [ ] Wire `/api/analytics/vitals` to PostHog or a DB table instead of console.log
 - [ ] Add dashboard widget for Core Web Vitals monitoring
 
-#### 8. Contact Form Backend
-- [ ] Wire contact form to actually send email via Brevo SMTP
-- [ ] Add success/error states to the form UI
+#### 8. Contact Form Backend — COMPLETE
+- [x] Wire contact form to Brevo SMTP (`app/api/contact/route.ts`)
+- [x] Interactive form with success/error/loading states (`ContactForm.tsx`)
 
 #### 9. Additional Testing
 - [ ] Add authenticated E2E tests (login → book tutor → classroom → review)

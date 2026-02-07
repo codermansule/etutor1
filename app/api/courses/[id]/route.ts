@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { captureError } from '@/lib/monitoring/sentry';
+import { courseUpdateSchema, parseBody } from '@/lib/validations/api-schemas';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -27,10 +28,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const body = await req.json();
+    const parsed = parseBody(courseUpdateSchema, await req.json());
+    if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
     const { data, error } = await supabase
       .from('courses')
-      .update({ ...body, updated_at: new Date().toISOString() })
+      .update({ ...parsed.data, updated_at: new Date().toISOString() })
       .eq('id', id)
       .eq('tutor_id', user.id)
       .select()

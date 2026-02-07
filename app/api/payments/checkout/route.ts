@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createServiceRoleClient } from "@/lib/supabase/server";
 import { captureError } from "@/lib/monitoring/sentry";
+import { checkoutSchema, parseBody } from "@/lib/validations/api-schemas";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://localhost:3000";
@@ -15,18 +16,9 @@ const stripe = new Stripe(stripeSecretKey, { apiVersion: "2022-11-15" });
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const {
-      bookingId,
-      studentEmail,
-      amount,
-      currency = "USD",
-      paymentMethod = "card",
-    } = body;
-
-    if (!bookingId || !amount || !studentEmail) {
-      return NextResponse.json({ error: "Missing required data" }, { status: 400 });
-    }
+    const parsed = parseBody(checkoutSchema, await req.json());
+    if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+    const { bookingId, studentEmail, amount, currency, paymentMethod } = parsed.data;
 
     const supabase = createServiceRoleClient();
     const { data: booking, error: bookingErr } = await supabase

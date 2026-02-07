@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { captureError } from '@/lib/monitoring/sentry';
+import { adminTutorActionSchema, parseBody } from '@/lib/validations/api-schemas';
 
 export async function GET(req: NextRequest) {
   try {
@@ -38,10 +39,9 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { tutorId, action } = await req.json();
-    if (!tutorId || !['approve', 'reject'].includes(action)) {
-      return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
-    }
+    const parsed = parseBody(adminTutorActionSchema, await req.json());
+    if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+    const { tutorId, action } = parsed.data;
 
     if (action === 'approve') {
       const { error } = await supabase

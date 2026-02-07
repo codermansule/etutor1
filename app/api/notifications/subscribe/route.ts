@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { captureError } from '@/lib/monitoring/sentry';
+import { pushSubscribeSchema, pushUnsubscribeSchema, parseBody } from '@/lib/validations/api-schemas';
 
 export async function POST(req: Request) {
   try {
@@ -8,10 +9,9 @@ export async function POST(req: Request) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { subscription } = await req.json();
-    if (!subscription?.endpoint || !subscription?.keys?.p256dh || !subscription?.keys?.auth) {
-      return NextResponse.json({ error: 'Invalid subscription' }, { status: 400 });
-    }
+    const parsed = parseBody(pushSubscribeSchema, await req.json());
+    if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+    const { subscription } = parsed.data;
 
     // Upsert subscription
     const { error } = await supabase
@@ -49,7 +49,9 @@ export async function DELETE(req: Request) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { endpoint } = await req.json();
+    const parsed = parseBody(pushUnsubscribeSchema, await req.json());
+    if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+    const { endpoint } = parsed.data;
 
     await supabase
       .from('push_subscriptions')

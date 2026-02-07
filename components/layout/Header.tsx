@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Logo from "../shared/Logo";
+import MobileNav from "./MobileNav";
 
 const navItems = [
   { href: "/about", label: "About" },
@@ -29,16 +30,17 @@ export default function Header() {
         <div className="flex items-center gap-2">
           <Link
             href="/login"
-            className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-300 transition hover:text-white"
+            className="hidden text-xs font-semibold uppercase tracking-[0.2em] text-slate-300 transition hover:text-white sm:inline"
           >
             Log in
           </Link>
           <Link
             href="/register"
-            className="rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-950 transition hover:brightness-110"
+            className="hidden rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-950 transition hover:brightness-110 sm:inline"
           >
             Sign up
           </Link>
+          <MobileNav navItems={navItems} />
         </div>
       </div>
     </header>

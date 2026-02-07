@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { captureError } from '@/lib/monitoring/sentry';
+import { courseCreateSchema, parseBody } from '@/lib/validations/api-schemas';
 
 export async function GET(req: NextRequest) {
   try {
@@ -38,7 +39,9 @@ export async function POST(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const body = await req.json();
+    const parsed = parseBody(courseCreateSchema, await req.json());
+    if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+    const body = parsed.data;
     const slug = body.title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
@@ -52,10 +55,10 @@ export async function POST(req: NextRequest) {
         subject_id: body.subject_id || null,
         title: body.title,
         slug,
-        description: body.description || '',
-        price: body.price || 0,
-        is_free: body.is_free || false,
-        level: body.level || 'all_levels',
+        description: body.description,
+        price: body.price,
+        is_free: body.is_free,
+        level: body.level,
         status: 'draft',
       })
       .select()

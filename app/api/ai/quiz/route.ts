@@ -2,10 +2,13 @@ import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { generateQuiz } from '@/lib/ai/quiz-generator';
 import { captureError } from '@/lib/monitoring/sentry';
+import { quizGenerateSchema, parseBody } from '@/lib/validations/api-schemas';
 
 export async function POST(req: Request) {
     try {
-        const { subjectId, topics, difficulty = 'adaptive' } = await req.json();
+        const parsed = parseBody(quizGenerateSchema, await req.json());
+        if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+        const { subjectId, topics, difficulty } = parsed.data;
         const supabase = await createServerClient();
 
         // 1. Auth check

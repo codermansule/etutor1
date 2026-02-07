@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Mail, Headphones, GraduationCap } from "lucide-react";
+import ContactForm from "@/components/features/contact/ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact Us | ETUTOR",
@@ -58,52 +59,7 @@ export default function ContactPage() {
       <section className="rounded-2xl border border-white/10 bg-white/5 p-8">
         <h2 className="text-2xl font-semibold text-white">Send us a message</h2>
         <p className="mt-2 text-sm text-slate-400">Fill out the form and we&apos;ll get back to you.</p>
-        <form className="mt-6 grid gap-5 md:grid-cols-2">
-          <div className="space-y-1.5">
-            <label htmlFor="contact-name" className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">Name</label>
-            <input
-              id="contact-name"
-              type="text"
-              placeholder="Your name"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label htmlFor="contact-email" className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">Email</label>
-            <input
-              id="contact-email"
-              type="email"
-              placeholder="you@example.com"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none"
-            />
-          </div>
-          <div className="space-y-1.5 md:col-span-2">
-            <label htmlFor="contact-subject" className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">Subject</label>
-            <input
-              id="contact-subject"
-              type="text"
-              placeholder="How can we help?"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none"
-            />
-          </div>
-          <div className="space-y-1.5 md:col-span-2">
-            <label htmlFor="contact-message" className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">Message</label>
-            <textarea
-              id="contact-message"
-              rows={5}
-              placeholder="Tell us more..."
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-sky-500 focus:outline-none"
-            />
-          </div>
-          <div className="md:col-span-2">
-            <button
-              type="button"
-              className="rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-8 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-950 transition hover:brightness-110"
-            >
-              Send message
-            </button>
-          </div>
-        </form>
+        <ContactForm />
       </section>
     </main>
   );

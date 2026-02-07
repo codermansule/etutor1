@@ -2,10 +2,13 @@ import { createServerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { generateStudyPlan } from '@/lib/ai/study-plan-generator';
 import { captureError } from '@/lib/monitoring/sentry';
+import { studyPlanSchema, parseBody } from '@/lib/validations/api-schemas';
 
 export async function POST(req: Request) {
     try {
-        const { subjectId, subjectName, goal, experienceLevel } = await req.json();
+        const parsed = parseBody(studyPlanSchema, await req.json());
+        if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+        const { subjectId, subjectName, goal, experienceLevel } = parsed.data;
         const supabase = await createServerClient();
 
         // 1. Check authentication

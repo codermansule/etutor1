@@ -159,3 +159,27 @@ test.describe("New Pages", () => {
     await expect(contactLink).toBeVisible();
   });
 });
+
+test.describe("Contact Form", () => {
+  test("contact form validates required fields", async ({ page }) => {
+    await page.goto("/contact");
+    const submitBtn = page.locator("button[type='submit']:has-text('Send message')");
+    await expect(submitBtn).toBeVisible();
+    // HTML required validation prevents empty submission — verify fields have required attribute
+    await expect(page.locator("#contact-name")).toHaveAttribute("required", "");
+    await expect(page.locator("#contact-email")).toHaveAttribute("required", "");
+    await expect(page.locator("#contact-subject")).toHaveAttribute("required", "");
+    await expect(page.locator("#contact-message")).toHaveAttribute("required", "");
+  });
+
+  test("contact form can be filled out", async ({ page }) => {
+    await page.goto("/contact");
+    await page.fill("#contact-name", "Test User");
+    await page.fill("#contact-email", "test@example.com");
+    await page.fill("#contact-subject", "Test Subject");
+    await page.fill("#contact-message", "This is a test message for the contact form.");
+    await expect(page.locator("#contact-name")).toHaveValue("Test User");
+    await expect(page.locator("#contact-email")).toHaveValue("test@example.com");
+    await expect(page.locator("#contact-subject")).toHaveValue("Test Subject");
+  });
+});

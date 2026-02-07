@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { captureError } from '@/lib/monitoring/sentry';
+import { redeemRewardSchema, parseBody } from '@/lib/validations/api-schemas';
 
 export async function POST(req: Request) {
   try {
-    const { rewardId } = await req.json();
+    const parsed = parseBody(redeemRewardSchema, await req.json());
+    if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
+    const { rewardId } = parsed.data;
     const supabase = await createServerClient();
 
     const { data: { user } } = await supabase.auth.getUser();
