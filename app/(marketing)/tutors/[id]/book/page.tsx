@@ -33,6 +33,9 @@ export default function BookTutorPage() {
             full_name,
             avatar_url,
             timezone
+          ),
+          tutor_subjects (
+            subject_id
           )
         `)
                 .eq("id", id)
@@ -68,13 +71,19 @@ export default function BookTutorPage() {
                 return;
             }
 
-            // 1. Create booking in Supabase
+            // 1. Create booking in Supabase (ensure tutor has at least one subject)
+            if (!tutor.tutor_subjects?.length) {
+                alert("This tutor has no subjects available for booking.");
+                setBookingLoading(false);
+                return;
+            }
+            const subjectId = tutor.tutor_subjects[0].subject_id;
             const { data: booking, error: bookingErr } = await supabase
                 .from("bookings")
                 .insert({
                     student_id: user.id,
                     tutor_id: tutor.id,
-                    subject_id: tutor.tutor_subjects?.[0]?.subject_id || "00000000-0000-0000-0000-000000000000", // Fallback
+                    subject_id: subjectId,
                     scheduled_at: selectedSlot.toISOString(),
                     price: tutor.hourly_rate,
                     status: "pending",
