@@ -1,8 +1,8 @@
-"use client";
+use client";
 
 import { useState, useEffect } from "react";
 import { createBrowserClient } from "@/lib/supabase/client";
-import { notFound, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -11,11 +11,8 @@ import { Loader2, ArrowLeft, ShieldCheck, CheckCircle2, Sparkles, CreditCard } f
 import BookingCalendar from "@/components/features/booking/BookingCalendar";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function BookTutorPage({
-    params,
-}: {
-    params: { id: string };
-}) {
+export default function BookTutorPage() {
+    const { id } = useParams()!;
     const router = useRouter();
     const supabase = createBrowserClient();
     const [loading, setLoading] = useState(true);
@@ -38,23 +35,26 @@ export default function BookTutorPage({
             timezone
           )
         `)
-                .eq("id", params.id)
+                .eq("id", id)
                 .single();
 
-            if (!tutorData) return notFound();
+            if (!tutorData) {
+                setLoading(false);
+                return;
+            }
             setTutor(tutorData);
 
             // Fetch availability
             const { data: availData } = await supabase
                 .from("availability")
                 .select("*")
-                .eq("tutor_id", params.id);
+                .eq("tutor_id", id);
 
             setAvailability(availData || []);
             setLoading(false);
         }
         loadData();
-    }, [params.id, supabase]);
+    }, [id, supabase]);
 
     const handleBooking = async (paymentMethod: "card" | "safepay") => {
         if (!selectedSlot) return;
@@ -128,6 +128,14 @@ export default function BookTutorPage({
             <div className="flex h-[80vh] items-center justify-center">
                 <Loader2 className="h-10 w-10 animate-spin text-sky-400" />
             </div>
+        );
+    }
+
+    if (!tutor) {
+        return (
+            <main className="py-12 px-4 sm:px-6 lg:px-8">
+                <p className="text-center text-slate-400">Tutor not found.</p>
+            </main>
         );
     }
 
