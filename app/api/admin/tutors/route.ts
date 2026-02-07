@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
 
     const { data, error } = await supabase
       .from('tutor_profiles')
-      .select('id, bio, hourly_rate, is_verified, rating, total_reviews, profiles(full_name, email, avatar_url, created_at)')
+      .select('id, bio, hourly_rate, is_verified, average_rating, rating_count, profiles(full_name, email, avatar_url, created_at)')
       .eq('is_verified', false)
       .order('created_at', { ascending: true });
 

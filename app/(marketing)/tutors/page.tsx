@@ -28,7 +28,7 @@ export default async function TutorsPage({
       average_rating,
       rating_count,
       is_verified,
-      profiles:id (
+      profiles (
         full_name,
         avatar_url
       ),
@@ -52,20 +52,24 @@ export default async function TutorsPage({
         query = query.lte("hourly_rate", parseFloat(maxPrice));
     }
 
-    const { data: tutors } = await query.order("average_rating", { ascending: false });
+    const { data: tutors, error } = await query.order("average_rating", { ascending: false });
+
+    if (error) {
+        console.error("[tutors] query error:", error.message);
+    }
 
     // Transform data for component
     const formattedTutors = (tutors || []).map((t: any) => ({
         id: t.id,
-        full_name: t.profiles.full_name,
-        avatar_url: t.profiles.avatar_url,
+        full_name: t.profiles?.full_name ?? "Tutor",
+        avatar_url: t.profiles?.avatar_url ?? null,
         headline: t.headline,
         about: t.about,
         hourly_rate: t.hourly_rate,
         average_rating: t.average_rating,
         rating_count: t.rating_count,
         is_verified: t.is_verified,
-        subjects: t.tutor_subjects.map((ts: any) => ts.subjects)
+        subjects: (t.tutor_subjects || []).map((ts: any) => ts.subjects)
     }));
 
     return (
