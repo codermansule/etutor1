@@ -28,7 +28,7 @@ type NavItem = {
 
 const studentNav: NavItem[] = [
   { href: "/student", label: "Dashboard", icon: Home },
-  { href: "/student/find-tutors", label: "Find Tutors", icon: Search },
+  { href: "/tutors", label: "Find Tutors", icon: Search },
   { href: "/student/my-lessons", label: "My Lessons", icon: Calendar },
   { href: "/student/courses", label: "Courses", icon: BookOpen },
   { href: "/student/ai-tutor", label: "AI Tutor", icon: BrainCircuit },

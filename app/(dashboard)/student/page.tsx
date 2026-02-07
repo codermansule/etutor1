@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 const quickActions = [
   {
-    href: "/student/find-tutors",
+    href: "/tutors",
     icon: Search,
     label: "Find a tutor",
     description: "Browse expert tutors by subject",

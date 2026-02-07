@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { createBrowserClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, AlertCircle, GraduationCap, User, Gift } from "lucide-react";
+import { Loader2, AlertCircle, GraduationCap, User, Gift, Camera } from "lucide-react";
 import SocialAuth from "@/components/features/auth/SocialAuth";
 import { cn } from "@/lib/utils";
 
@@ -29,9 +29,22 @@ function RegisterForm() {
     fullName: "",
     role: "student" as "student" | "tutor",
   });
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [error, setError] = useState<null | string>(null);
   const [status, setStatus] = useState<null | string>(null);
   const [loading, setLoading] = useState(false);
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      setError("Image must be under 2 MB.");
+      return;
+    }
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -58,6 +71,23 @@ function RegisterForm() {
     }
 
     if (user) {
+      let avatarUrl: string | null = null;
+
+      // Upload avatar if provided
+      if (avatarFile) {
+        const ext = avatarFile.name.split(".").pop() ?? "png";
+        const filePath = `${user.id}/avatar.${ext}`;
+        const { error: uploadError } = await supabase.storage
+          .from("avatars")
+          .upload(filePath, avatarFile, { upsert: true });
+        if (!uploadError) {
+          const { data: urlData } = supabase.storage
+            .from("avatars")
+            .getPublicUrl(filePath);
+          avatarUrl = urlData.publicUrl;
+        }
+      }
+
       await supabase.from("profiles").upsert(
         {
           id: user.id,
@@ -65,6 +95,7 @@ function RegisterForm() {
           full_name: fullName || user.email || "",
           role,
           timezone: "UTC",
+          ...(avatarUrl ? { avatar_url: avatarUrl } : {}),
         },
         { ignoreDuplicates: true },
       );
@@ -140,6 +171,28 @@ function RegisterForm() {
             <GraduationCap className={cn("h-6 w-6", form.role === "tutor" ? "text-emerald-400" : "text-slate-600")} />
             <span className="text-xs font-bold uppercase tracking-widest">Tutor</span>
           </button>
+        </div>
+
+        <div className="flex justify-center">
+          <label htmlFor="avatar-upload" className="group relative cursor-pointer">
+            <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-white/20 bg-white/5 transition group-hover:border-sky-400/50">
+              {avatarPreview ? (
+                <img src={avatarPreview} alt="Avatar preview" className="h-full w-full object-cover" />
+              ) : (
+                <Camera className="h-6 w-6 text-slate-500 transition group-hover:text-sky-400" />
+              )}
+            </div>
+            <span className="mt-1 block text-center text-[10px] uppercase tracking-widest text-slate-500">
+              {avatarPreview ? "Change" : "Add photo"}
+            </span>
+            <input
+              id="avatar-upload"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              className="hidden"
+              onChange={handleAvatarChange}
+            />
+          </label>
         </div>
 
         <div className="space-y-2">
