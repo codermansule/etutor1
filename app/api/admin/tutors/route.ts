@@ -46,14 +46,13 @@ export async function PATCH(req: NextRequest) {
     if (action === 'approve') {
       const { error } = await supabase
         .from('tutor_profiles')
-        .update({ is_verified: true })
+        .update({ is_verified: true, is_approved: true })
         .eq('id', tutorId);
       if (error) throw error;
     } else {
-      // For reject, just mark as not verified (could also delete)
       const { error } = await supabase
         .from('tutor_profiles')
-        .update({ is_verified: false })
+        .update({ is_verified: false, is_approved: false })
         .eq('id', tutorId);
       if (error) throw error;
     }
