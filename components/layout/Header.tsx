@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logo from "../shared/Logo";
 import MobileNav from "./MobileNav";
+import { createServerClient } from "@/lib/supabase/server";
 
 const navItems = [
   { href: "/about", label: "About" },
@@ -11,7 +12,18 @@ const navItems = [
   { href: "/blog", label: "Blog" },
 ];
 
-export default function Header() {
+export default async function Header() {
+  let user = null;
+  try {
+    const supabase = await createServerClient();
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // Not authenticated — show login/signup
+  }
+
+  const isLoggedIn = !!user;
+
   return (
     <header aria-label="Site header" className="sticky top-0 z-50 w-full border-b border-white/10 bg-slate-950/80 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-slate-300 sm:px-6 lg:px-8">
@@ -28,19 +40,30 @@ export default function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <Link
-            href="/login"
-            className="hidden text-xs font-semibold uppercase tracking-[0.2em] text-slate-300 transition hover:text-white sm:inline"
-          >
-            Log in
-          </Link>
-          <Link
-            href="/register"
-            className="hidden rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-950 transition hover:brightness-110 sm:inline"
-          >
-            Sign up
-          </Link>
-          <MobileNav navItems={navItems} />
+          {isLoggedIn ? (
+            <Link
+              href="/student"
+              className="hidden rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-950 transition hover:brightness-110 sm:inline"
+            >
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="hidden text-xs font-semibold uppercase tracking-[0.2em] text-slate-300 transition hover:text-white sm:inline"
+              >
+                Log in
+              </Link>
+              <Link
+                href="/register"
+                className="hidden rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-950 transition hover:brightness-110 sm:inline"
+              >
+                Sign up
+              </Link>
+            </>
+          )}
+          <MobileNav navItems={navItems} isLoggedIn={isLoggedIn} />
         </div>
       </div>
     </header>

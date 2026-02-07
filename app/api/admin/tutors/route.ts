@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { createServerClient, createServiceRoleClient } from '@/lib/supabase/server';
 import { captureError } from '@/lib/monitoring/sentry';
 import { adminTutorActionSchema, parseBody } from '@/lib/validations/api-schemas';
 
@@ -43,14 +43,17 @@ export async function PATCH(req: NextRequest) {
     if (!parsed.success) return NextResponse.json({ error: parsed.error }, { status: 400 });
     const { tutorId, action } = parsed.data;
 
+    // Use service role to bypass RLS (admin can't update other users' profiles via RLS)
+    const adminClient = createServiceRoleClient();
+
     if (action === 'approve') {
-      const { error } = await supabase
+      const { error } = await adminClient
         .from('tutor_profiles')
         .update({ is_verified: true, is_approved: true })
         .eq('id', tutorId);
       if (error) throw error;
     } else {
-      const { error } = await supabase
+      const { error } = await adminClient
         .from('tutor_profiles')
         .update({ is_verified: false, is_approved: false })
         .eq('id', tutorId);

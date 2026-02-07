@@ -6,9 +6,10 @@ import { Menu, X } from "lucide-react";
 
 interface MobileNavProps {
   navItems: { href: string; label: string }[];
+  isLoggedIn?: boolean;
 }
 
-export default function MobileNav({ navItems }: MobileNavProps) {
+export default function MobileNav({ navItems, isLoggedIn }: MobileNavProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -39,20 +40,32 @@ export default function MobileNav({ navItems }: MobileNavProps) {
               </Link>
             ))}
             <div className="mt-4 flex flex-col gap-3 pb-2">
-              <Link
-                href="/login"
-                onClick={() => setOpen(false)}
-                className="text-center text-sm font-semibold uppercase tracking-[0.2em] text-slate-300 transition hover:text-white"
-              >
-                Log in
-              </Link>
-              <Link
-                href="/register"
-                onClick={() => setOpen(false)}
-                className="rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-5 py-2.5 text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-950 transition hover:brightness-110"
-              >
-                Sign up
-              </Link>
+              {isLoggedIn ? (
+                <Link
+                  href="/student"
+                  onClick={() => setOpen(false)}
+                  className="rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-5 py-2.5 text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-950 transition hover:brightness-110"
+                >
+                  Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setOpen(false)}
+                    className="text-center text-sm font-semibold uppercase tracking-[0.2em] text-slate-300 transition hover:text-white"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setOpen(false)}
+                    className="rounded-full bg-gradient-to-r from-sky-500 to-cyan-400 px-5 py-2.5 text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-950 transition hover:brightness-110"
+                  >
+                    Sign up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </nav>
