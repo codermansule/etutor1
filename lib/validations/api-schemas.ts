@@ -44,6 +44,18 @@ export const checkoutSchema = z.object({
   paymentMethod: z.enum(["card", "safepay"]).default("card"),
 });
 
+export const bookingCreateSchema = z.object({
+  tutorId: z.string().uuid(),
+  subjectId: z.string().uuid(),
+  scheduledAt: z
+    .string()
+    .refine((value) => !Number.isNaN(Date.parse(value)), {
+      message: "scheduledAt must be a valid ISO datetime string",
+    }),
+  price: z.number().positive(),
+  currency: z.string().length(3).default("USD"),
+});
+
 // ── Classroom ──────────────────────────────────────────────────────
 export const classroomEndSchema = z.object({
   sessionId: z.string().uuid(),

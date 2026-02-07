@@ -71,29 +71,31 @@ export default function BookTutorPage() {
                 return;
             }
 
-            // 1. Create booking in Supabase (ensure tutor has at least one subject)
-            if (!tutor.tutor_subjects?.length) {
+            const amount = typeof tutor.hourly_rate === "number" ? tutor.hourly_rate : parseFloat(tutor.hourly_rate ?? "0");
+            const subjectId = tutor.tutor_subjects?.[0]?.subject_id;
+            if (!subjectId) {
                 alert("This tutor has no subjects available for booking.");
                 setBookingLoading(false);
                 return;
             }
-            const subjectId = tutor.tutor_subjects[0].subject_id;
-            const { data: booking, error: bookingErr } = await supabase
-                .from("bookings")
-                .insert({
-                    student_id: user.id,
-                    tutor_id: tutor.id,
-                    subject_id: subjectId,
-                    scheduled_at: selectedSlot.toISOString(),
-                    price: tutor.hourly_rate,
-                    status: "pending",
-                })
-                .select()
-                .single();
+            const bookingResponse = await fetch("/api/bookings/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    tutorId: tutor.id,
+                    subjectId,
+                    scheduledAt: selectedSlot.toISOString(),
+                    price: amount,
+                    currency: "USD",
+                }),
+            });
 
-            if (bookingErr) throw bookingErr;
+            const bookingPayload = await bookingResponse.json();
 
-            const amount = typeof tutor.hourly_rate === "number" ? tutor.hourly_rate : parseFloat(tutor.hourly_rate ?? "0");
+            if (!bookingResponse.ok || !bookingPayload.bookingId) {
+                throw new Error(bookingPayload.error ?? "Failed to create booking.");
+            }
+
             const response = await fetch("/api/payments/checkout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
