@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/text-area";
 import { Button } from "@/components/ui/button";
 import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
+import AvatarUpload from "@/components/features/settings/AvatarUpload";
 
 export const metadata: Metadata = {
     title: "Student Settings | ETUTOR",
@@ -44,7 +45,7 @@ export default async function StudentSettingsPage() {
     const userId = user?.id ?? "";
 
     const [profileRes, referralsRes] = await Promise.all([
-        supabase.from("profiles").select("full_name, email, referral_code, timezone, preferred_language, bio").eq("id", userId).single(),
+        supabase.from("profiles").select("full_name, email, referral_code, timezone, preferred_language, bio, avatar_url").eq("id", userId).single(),
         supabase
             .from("referrals")
             .select("id, status, created_at, completed_at")
@@ -62,6 +63,10 @@ export default async function StudentSettingsPage() {
             <div className="space-y-2">
                 <h1 className="text-3xl font-black uppercase tracking-[0.15em] text-white">Settings</h1>
                 <p className="text-sm text-slate-400 italic">Manage your account preferences and referrals.</p>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-slate-900/30 p-8 space-y-6">
+                <AvatarUpload userId={userId} currentAvatarUrl={profile?.avatar_url} />
             </div>
 
             <form action={updateStudentSettings} className="rounded-3xl border border-white/10 bg-slate-900/30 p-8 space-y-6">

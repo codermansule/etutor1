@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/text-area";
 import { createServerClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
+import AvatarUpload from "@/components/features/settings/AvatarUpload";
 
 export const metadata: Metadata = {
     title: "Tutor Settings | ETUTOR",
@@ -72,7 +73,7 @@ export default async function TutorSettingsPage() {
 
     const userId = user?.id ?? "";
     const [profileRes, tutorRes] = await Promise.all([
-        supabase.from("profiles").select("full_name, email, timezone, preferred_language").eq("id", userId).single(),
+        supabase.from("profiles").select("full_name, email, timezone, preferred_language, avatar_url").eq("id", userId).single(),
         supabase
             .from("tutor_profiles")
             .select("headline, about, hourly_rate, trial_rate, currency, intro_video_url")
@@ -90,6 +91,10 @@ export default async function TutorSettingsPage() {
                 <p className="text-sm text-slate-400 italic">
                     Update your profile, pricing, and intro video for students.
                 </p>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-slate-900/30 p-8">
+                <AvatarUpload userId={userId} currentAvatarUrl={profile?.avatar_url} />
             </div>
 
             <form action={updateTutorSettings} className="grid gap-6 rounded-3xl border border-white/10 bg-slate-900/30 p-8 lg:grid-cols-2">

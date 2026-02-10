@@ -2,7 +2,7 @@
 
 import { useState, Suspense } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { createBrowserClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ export default function RegisterPage() {
 
 function RegisterForm() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const refCode = searchParams.get("ref") ?? "";
   const [form, setForm] = useState({
     email: "",
@@ -116,21 +117,11 @@ function RegisterForm() {
         }).catch(() => {});
       }
 
-      // Sign in immediately since email confirmation is disabled
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (signInError) {
-        setError("Account created but couldn't log in. Please login manually.");
-        setLoading(false);
-        return;
-      }
     }
 
-    setStatus("Registration successful! Welcome to ETUTOR. Redirecting...");
-    window.location.href = role === "tutor" ? "/tutor" : "/student";
+    // Redirect to email confirmation page
+    router.push(`/confirm-email?email=${encodeURIComponent(email)}`);
+    return;
   };
 
   return (

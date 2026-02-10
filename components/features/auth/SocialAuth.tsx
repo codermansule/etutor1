@@ -3,23 +3,26 @@
 import { useState } from "react";
 import { createBrowserClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 
 export default function SocialAuth() {
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const supabase = createBrowserClient();
 
     const handleGoogleLogin = async () => {
         setLoading(true);
-        const { error } = await supabase.auth.signInWithOAuth({
+        setError(null);
+
+        const { error: oauthError } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
                 redirectTo: `${window.location.origin}/auth/callback`,
             },
         });
 
-        if (error) {
-            console.error("Error logging in with Google:", error.message);
+        if (oauthError) {
+            setError(oauthError.message);
             setLoading(false);
         }
     };
@@ -36,6 +39,13 @@ export default function SocialAuth() {
                     </span>
                 </div>
             </div>
+
+            {error && (
+                <div className="flex items-center gap-2 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm">
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    <p>{error}</p>
+                </div>
+            )}
 
             <Button
                 type="button"

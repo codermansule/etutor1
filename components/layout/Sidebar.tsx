@@ -17,6 +17,8 @@ import {
   Clock,
   DollarSign,
   Shield,
+  ShieldCheck,
+  FileCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +37,7 @@ const studentNav: NavItem[] = [
   { href: "/student/achievements", label: "Achievements", icon: Trophy },
   { href: "/student/rewards", label: "Rewards", icon: Gift },
   { href: "/messages", label: "Messages", icon: MessageSquare },
+  { href: "/student/verification", label: "Verification", icon: ShieldCheck },
   { href: "/student/settings", label: "Settings", icon: Settings },
 ];
 
@@ -47,6 +50,7 @@ const tutorNav: NavItem[] = [
   { href: "/tutor/earnings", label: "Earnings", icon: DollarSign },
   { href: "/tutor/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/tutor/messages", label: "Messages", icon: MessageSquare },
+  { href: "/tutor/verification", label: "Verification", icon: ShieldCheck },
   { href: "/tutor/settings", label: "Settings", icon: Settings },
 ];
 
@@ -54,6 +58,7 @@ const adminNav: NavItem[] = [
   { href: "/admin", label: "System Overview", icon: Home },
   { href: "/admin/users", label: "User Management", icon: Users },
   { href: "/admin/tutors", label: "Tutor Approval", icon: Users },
+  { href: "/admin/verifications", label: "Verifications", icon: FileCheck },
   { href: "/admin/subjects", label: "Subjects & Skills", icon: BookOpen },
   { href: "/admin/ingestion", label: "AI Knowledge", icon: BrainCircuit },
   { href: "/admin/analytics", label: "Global Analytics", icon: BarChart3 },

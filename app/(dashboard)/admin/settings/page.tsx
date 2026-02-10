@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/text-area";
 import { createServerClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { Metadata } from "next";
+import AvatarUpload from "@/components/features/settings/AvatarUpload";
 
 export const metadata: Metadata = {
     title: "Admin Settings | ETUTOR",
@@ -55,7 +56,7 @@ export default async function AdminSettingsPage() {
     ] = await Promise.all([
         supabase
             .from("profiles")
-            .select("full_name, email, phone, timezone, preferred_language, bio")
+            .select("full_name, email, phone, timezone, preferred_language, bio, avatar_url")
             .eq("id", userId)
             .single(),
         supabase.from("bookings").select("id", { head: true, count: "exact" }),
@@ -100,6 +101,10 @@ export default async function AdminSettingsPage() {
                     <p className="mt-2 text-3xl font-semibold text-white">{tutorsRes.count ?? 0}</p>
                     <p className="text-xs text-slate-500">active tutors</p>
                 </div>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-slate-900/30 p-8">
+                <AvatarUpload userId={userId} currentAvatarUrl={profile?.avatar_url} />
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-slate-900/30 p-8 space-y-6">
