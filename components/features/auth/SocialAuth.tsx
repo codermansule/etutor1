@@ -14,10 +14,18 @@ export default function SocialAuth() {
         setLoading(true);
         setError(null);
 
+        const siteUrl = typeof window !== 'undefined' 
+            ? window.location.origin 
+            : (process.env.NEXT_PUBLIC_SITE_URL || 'https://etutor.studybitests.com');
+        
         const { error: oauthError } = await supabase.auth.signInWithOAuth({
             provider: "google",
             options: {
-                redirectTo: "https://etutor.studybitests.com/auth/callback",
+                redirectTo: `${siteUrl}/auth/callback`,
+                queryParams: {
+                    access_type: 'offline',
+                    prompt: 'consent',
+                },
             },
         });
 

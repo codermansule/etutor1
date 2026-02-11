@@ -5,7 +5,7 @@ import { captureError } from "@/lib/monitoring/sentry";
 import { checkoutSchema, parseBody } from "@/lib/validations/api-schemas";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://localhost:3000";
+const appUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const safePayInstructions = process.env.SAFEPAY_INSTRUCTIONS ?? "Send payment via SafePay to 0300-0000000 with the booking ID and email us at support@studybitests.com.";
 
 if (!stripeSecretKey) {

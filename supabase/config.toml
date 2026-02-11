@@ -9,8 +9,8 @@ sql_paths = ["./seed.sql"]
 
 [auth]
 enabled = true
-site_url = "http://localhost:3000"
-additional_redirect_urls = ["https://etutor.vercel.app/**"]
+site_url = "https://etutor.studybitests.com"
+additional_redirect_urls = ["https://etutor.studybitests.com/**", "https://etutor.vercel.app/**", "http://localhost:3000/**"]
 
 [auth.email]
 enable_signup = true
