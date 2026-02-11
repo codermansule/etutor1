@@ -55,12 +55,10 @@ export async function middleware(req: NextRequest) {
   const isProtected = protectedPaths.some((p) => pathname.startsWith(p));
 
   if (isProtected) {
-    const hasAuthCookie = req.cookies
-      .getAll()
-      .some(
-        (cookie) =>
-          cookie.name.startsWith("sb-") && cookie.name.includes("auth-token")
-      );
+  // Detect Supabase auth cookies (e.g. sb-access-token, sb-refresh-token)
+  const hasAuthCookie = req.cookies
+    .getAll()
+    .some((cookie) => cookie.name.startsWith("sb-"));
 
     if (!hasAuthCookie) {
       const loginUrl = new URL("/login", req.url);
