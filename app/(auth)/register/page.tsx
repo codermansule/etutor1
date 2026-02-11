@@ -117,11 +117,24 @@ function RegisterForm() {
         }).catch(() => {});
       }
 
+      // Auto-login since email confirmation is disabled
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        setError("Account created but couldn't log in automatically. Please go to login.");
+        setLoading(false);
+        return;
+      }
+
+      // Redirect to dashboard based on role
+      router.push(role === "tutor" ? "/tutor" : "/student");
+      return;
     }
 
-    // Redirect to email confirmation page
-    router.push(`/confirm-email?email=${encodeURIComponent(email)}`);
-    return;
+    setLoading(false);
   };
 
   return (

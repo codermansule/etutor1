@@ -39,7 +39,7 @@ export const EmailTemplates = {
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #334155;">
         <h1 style="color: #0ea5e9;">Welcome to ETUTOR, ${name}!</h1>
         <p>Your journey to elite learning starts here. You've officially joined a community of expert tutors and AI-powered learning tools.</p>
-        <p>Ready to start? <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://etutor.studybitests.com'}/student" style="color: #0ea5e9; font-weight: bold;">Log in to your dashboard</a></p>
+        <p>Ready to start? <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://etutor.studybitests.com'}/student" style="color: #0ea5e9; font-weight: bold;">Go to your dashboard</a></p>
         <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
         <p style="font-size: 12px; color: #94a3b8;">Level up your skills with AI-powered study plans and live vector-search classrooms.</p>
       </div>
