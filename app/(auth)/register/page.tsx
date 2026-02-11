@@ -102,6 +102,7 @@ function RegisterForm() {
       );
 
       // Send welcome email via our own SMTP (bypasses Supabase email)
+      // Don't await - fire and forget
       fetch("/api/auth/welcome-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -118,20 +119,23 @@ function RegisterForm() {
       }
 
       // Auto-login since email confirmation is disabled
+      // Wait briefly for user to be fully created in Supabase
+      await new Promise(resolve => setTimeout(resolve, 500));
+
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (signInError) {
-        setError("Account created but couldn't log in automatically. Please go to login.");
+        setError("Account created! Please login with your credentials.");
         setLoading(false);
+        // Don't redirect - let user login manually
         return;
       }
 
       // Redirect to dashboard based on role
       router.push(role === "tutor" ? "/tutor" : "/student");
-      return;
     }
 
     setLoading(false);
