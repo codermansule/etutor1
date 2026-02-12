@@ -76,20 +76,25 @@ function RegisterForm() {
 
       // Upload avatar if provided
       if (avatarFile) {
-        const ext = avatarFile.name.split(".").pop() ?? "png";
-        const filePath = `${user.id}/avatar.${ext}`;
-        const { error: uploadError } = await supabase.storage
-          .from("avatars")
-          .upload(filePath, avatarFile, { upsert: true });
-        if (!uploadError) {
-          const { data: urlData } = supabase.storage
+        try {
+          const ext = avatarFile.name.split(".").pop() ?? "png";
+          const filePath = `${user.id}/avatar.${ext}`;
+          const { error: uploadError } = await supabase.storage
             .from("avatars")
-            .getPublicUrl(filePath);
-          avatarUrl = urlData.publicUrl;
+            .upload(filePath, avatarFile, { upsert: true });
+
+          if (!uploadError) {
+            const { data: urlData } = supabase.storage
+              .from("avatars")
+              .getPublicUrl(filePath);
+            avatarUrl = urlData.publicUrl;
+          }
+        } catch (e) {
+          console.error("Avatar upload failed:", e);
         }
       }
 
-      await supabase.from("profiles").upsert(
+      const { error: profileError } = await supabase.from("profiles").upsert(
         {
           id: user.id,
           email: user.email ?? email,
@@ -101,13 +106,19 @@ function RegisterForm() {
         { ignoreDuplicates: true },
       );
 
+      if (profileError) {
+        console.error("Profile creation error:", profileError);
+        // We continue anyway as the trigger might have worked, 
+        // but we should be aware of this error.
+      }
+
       // Send welcome email via our own SMTP (bypasses Supabase email)
       // Don't await - fire and forget
       fetch("/api/auth/welcome-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, fullName }),
-      }).catch(() => {});
+      }).catch(() => { });
 
       // Complete referral if a code was provided
       if (refCode) {
@@ -115,22 +126,25 @@ function RegisterForm() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ referralCode: refCode }),
-        }).catch(() => {});
+        }).catch(() => { });
       }
 
       // Auto-login since email confirmation is disabled
-      // Wait briefly for user to be fully created in Supabase
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Wait briefly for user/profile to be fully ready
+      await new Promise(resolve => setTimeout(resolve, 800));
 
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (signInError) {
-        setError("Account created! Please login with your credentials.");
+        if (signInError.message.includes("Email not confirmed")) {
+          setError("Account created! Please check your email to verify your account before logging in.");
+        } else {
+          setError("Account created! Please login with your credentials.");
+        }
         setLoading(false);
-        // Don't redirect - let user login manually
         return;
       }
 

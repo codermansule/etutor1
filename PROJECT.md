@@ -1535,6 +1535,111 @@ Built via 4 parallel agents + 1 shared migration file (`supabase/migrations/2026
 - Web Vitals endpoint logs to console only (not persisted)
 - Phase 2/3 have partial implementations noted in their sections above (onboarding wizard, LiveKit video, tldraw)
 
+---
+
+### Phase 10 — Auth System Overhaul + Verification & Onboarding (2026-02-11)
+
+**Status:** IN PROGRESS
+
+#### 10A. Email Confirmation Flow (Priority: Critical)
+- **Problem:** Email confirmation disabled (`enable_confirmations = false` in config.toml), users auto-login after signup with no email verification, no "check your email" redirect page
+- **Solution:**
+  - Enable `enable_confirmations = true` in `supabase/config.toml`
+  - Modify `app/(auth)/register/page.tsx` — remove auto-sign-in, redirect to `/confirm-email`
+  - Create `app/(auth)/confirm-email/page.tsx` — "Check your email" page with resend button
+  - Create `app/auth/confirm/route.ts` — handles Supabase email confirmation token, exchanges for session, role-based redirect to `/admin`, `/tutor`, or `/student`
+  - Improve `lib/notifications/email-service.ts` welcome email template
+
+#### 10B. Google OAuth Fix (Priority: Critical)
+- **Problem:** Google OAuth disabled in Supabase config (`enabled = false`), SocialAuth component tries to use it, OAuth callback always redirects to `/student` ignoring user role
+- **Solution:**
+  - Enable `[auth.external.google] enabled = true` in `supabase/config.toml` with env var references
+  - Fix `components/features/auth/SocialAuth.tsx` — add error display, disable when unconfigured
+  - Fix `app/auth/callback/route.ts` — look up user profile role after session exchange, create profile if missing (first-time OAuth), redirect to correct dashboard
+  - **User action required:** Set up Google Cloud Console OAuth credentials, add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` to `.env.local` and Supabase Dashboard
+
+#### 10C. Verification Document System (Priority: High)
+- **Problem:** No identity verification (CNIC/passport), no live photo verification, no CV upload
+- **Solution:**
+  - New migration: `supabase/migrations/20260211_verification_documents.sql`
+    - `verification_documents` table (user_id, document_type, file_url, status, reviewed_by, rejection_reason)
+    - Add `verification_status` and `cv_url` columns to `profiles`
+    - RLS: users view/insert own docs, admins manage all
+  - Create `components/features/verification/DocumentUpload.tsx` — reusable upload component (CNIC front/back, passport, CV)
+  - Create `components/features/verification/LivePhotoCapture.tsx` — webcam capture with countdown
+  - Create `components/features/verification/VerificationStatus.tsx` — status badge component
+  - Create `app/(dashboard)/student/verification/page.tsx` — student verification page
+  - Create `app/(dashboard)/tutor/verification/page.tsx` — tutor verification page
+  - Create `app/api/verification/upload/route.ts` — file upload to Supabase Storage `verification-documents` bucket
+  - Create `app/api/verification/status/route.ts` — check verification status
+
+#### 10D. Profile Image Upload in Settings (Priority: High)
+- **Problem:** No avatar upload/change in any settings page (student/tutor/admin)
+- **Solution:**
+  - Create `components/features/settings/AvatarUpload.tsx` — client component for avatar upload (preview, 2MB limit, Supabase Storage `avatars` bucket)
+  - Add `AvatarUpload` to `app/(dashboard)/student/settings/page.tsx`
+  - Add `AvatarUpload` to `app/(dashboard)/tutor/settings/page.tsx`
+  - Add `AvatarUpload` to `app/(dashboard)/admin/settings/page.tsx`
+
+#### 10E. Admin Verification Review Panel (Priority: High)
+- **Problem:** No admin interface to review uploaded verification documents
+- **Solution:**
+  - Create `app/(dashboard)/admin/verifications/page.tsx` — list pending verifications with approve/reject buttons
+  - Create `app/api/admin/verifications/route.ts` — GET pending, PATCH approve/reject
+  - Create `app/api/admin/verifications/[id]/route.ts` — view specific user's documents
+  - Add "Verifications" nav link in `components/layout/Sidebar.tsx` for admin role
+  - Auto-update `profiles.verification_status = 'verified'` when all documents approved
+
+#### 10F. Remaining Auth Fixes (Priority: Medium)
+- **Problem:** Recover page uses raw HTML (inconsistent UI), middleware doesn't exclude confirm routes
+- **Solution:**
+  - Fix `app/(auth)/recover/page.tsx` — use Button/Input components, add back-to-login link, proper success/error styling
+  - Fix `middleware.ts` — ensure `/auth/confirm` not blocked
+  - Support `SUPER_ADMIN_EMAIL` env var in dashboard layout
+
+#### Files to Create
+- `supabase/migrations/20260211_verification_documents.sql`
+- `app/(auth)/confirm-email/page.tsx`
+- `app/auth/confirm/route.ts`
+- `components/features/verification/DocumentUpload.tsx`
+- `components/features/verification/LivePhotoCapture.tsx`
+- `components/features/verification/VerificationStatus.tsx`
+- `components/features/settings/AvatarUpload.tsx`
+- `app/(dashboard)/student/verification/page.tsx`
+- `app/(dashboard)/tutor/verification/page.tsx`
+- `app/(dashboard)/admin/verifications/page.tsx`
+- `app/api/verification/upload/route.ts`
+- `app/api/verification/status/route.ts`
+- `app/api/admin/verifications/route.ts`
+- `app/api/admin/verifications/[id]/route.ts`
+
+#### Files to Modify
+- `supabase/config.toml`
+- `app/(auth)/register/page.tsx`
+- `app/auth/callback/route.ts`
+- `components/features/auth/SocialAuth.tsx`
+- `lib/notifications/email-service.ts`
+- `app/(dashboard)/student/settings/page.tsx`
+- `app/(dashboard)/tutor/settings/page.tsx`
+- `app/(dashboard)/admin/settings/page.tsx`
+- `app/(auth)/recover/page.tsx`
+- `app/(dashboard)/layout.tsx`
+- `middleware.ts`
+- `components/layout/Sidebar.tsx`
+
+#### New Environment Variables
+```env
+# Google OAuth (set in Supabase Dashboard)
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+# Super Admin
+SUPER_ADMIN_EMAIL=admin@etutor.studybitests.com
+```
+
+#### Supabase Storage Buckets Needed
+- `verification-documents` — Private bucket (admin-only read via service role)
+- `avatars` — Public bucket (already exists)
+
 ## Environment Variables Required
 
 ```env
