@@ -1,8 +1,8 @@
 # ETUTOR - Complete Project Specification
 
-**Version:** 1.5
+**Version:** 1.6
 **Created:** 2026-02-04
-**Last Updated:** 2026-02-11
+**Last Updated:** 2026-02-12
 **Status:** Phase 1-10 Complete — SEO overhaul, dashboard settings + analytics, 92 E2E tests passing, mobile-ready, launch prep in progress
 
 ---
