@@ -76,6 +76,19 @@ export default function AboutPage() {
         </p>
       </section>
 
+      <section aria-labelledby="etutor-founder" className="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <h2 id="etutor-founder" className="text-xl font-semibold text-white">Who founded eTutor</h2>
+        <p className="mt-2 max-w-2xl text-slate-300">
+          <a href="https://suleman-khan.com/about/" className="text-sky-300 underline underline-offset-4">
+            Suleman Khan
+          </a>{" "}
+          founded eTutor, drawing on his experience building{" "}
+          <a href="https://www.studybitests.com/Study-Bites-Tutoring-Services" className="text-sky-300 underline underline-offset-4">
+            Study Bites
+          </a>.
+        </p>
+      </section>
+
       <section className="grid gap-6 md:grid-cols-2">
         {values.map((value) => (
           <div
